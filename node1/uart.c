@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include "stdint.h"
 
-uint16_t ubrr = 25;
+uint16_t ubrr = 31;
 
 //From datasheet
 void uart_init(){
@@ -15,6 +15,8 @@ void uart_init(){
 
     //Set frame format: 8data, 2stop bit
     UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
+
+    //fdevopen(uart_transmit, uart_receive);
 }
 
 void uart_transmit(unsigned char data) {

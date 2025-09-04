@@ -1,3 +1,4 @@
+#define __AVR_AT90USB162__
 #include <avr/io.h>
 #include <stdint.h>
 
