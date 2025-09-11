@@ -1,8 +1,8 @@
 #include "uart.h"
 #include <avr/io.h>
 
-//baudrate 9600 for 8MHz
-uint16_t ubrr = 31;
+//baudrate 9600 for 5MHz
+const uint16_t ubrr = 31;
 
 //From datasheet
 void uart_init(){
