@@ -1,4 +1,4 @@
-#define __AVR_AT90USB162__
+//#define __AVR_AT90USB162__
 #include <avr/io.h>
 #include <stdint.h>
 
@@ -7,8 +7,8 @@ void flashingLED() {
     
     while(1){
         PORTA |= 1;
-        for(uint32_t i = 0; i < 100000; ++i);
+        for(uint32_t i = 0; i < 200000; ++i);
         PORTA &= ~1;
-        for(uint32_t i = 0; i < 100000; ++i);
+        for(uint32_t i = 0; i < 200000; ++i);
     }
 }

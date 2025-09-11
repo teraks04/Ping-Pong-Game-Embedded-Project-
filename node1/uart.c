@@ -1,38 +1,38 @@
 #include "uart.h"
 #include <avr/io.h>
-#include "stdint.h"
 
+//baudrate 9600 for 8MHz
 uint16_t ubrr = 31;
 
 //From datasheet
 void uart_init(){
     // Set baudrate
-    UBRRH = (unsigned char)(ubrr >> 8);
-    UBRRL = (unsigned char)ubrr;
+    UBRR0H = (unsigned char)(ubrr >> 8);
+    UBRR0L = (unsigned char)ubrr;
 
     //Enable receiver and transmitter
-    UCSRB = (1<<RXEN)|(1<<TXEN);
+    UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 
     //Set frame format: 8data, 2stop bit
-    UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
+    UCSR0C = (1<<URSEL0)|(1<<USBS0)|(3<<UCSZ00);
 
     //fdevopen(uart_transmit, uart_receive);
 }
 
 void uart_transmit(unsigned char data) {
     // Wait for empty transmit buffer
-    while (!(UCSRA & (1 << UDRE)));
+    while (!(UCSR0A & (1 << UDRE0)));
     // Put data into buffer, sends the data
-    UDR = data;
+    UDR0 = data;
 }
 
 unsigned char uart_receive(void) {
     // Wait for data to be received
-    while (!(UCSRA & (1 << RXC)));
+    while (!(UCSR0A & (1 << RXC0)));
     // Get and return received data from buffer
-    return UDR;
+    return UDR0;
 }
 
-bool uart_recieved(void){
-    return UCSRA & (1 << RXC);
+uint8_t uart_recieved(void){
+    return UCSR0A & (1 << RXC0);
 }

@@ -5,9 +5,11 @@
 #include "tests.h"
 
 int main() {
+    //flashingLED();
+    
     uart_init();
     while(1){
-        uart_transmit(0b10110111);
+        uart_transmit('a');
         for(uint32_t i = 0; i < 400000; ++i);
-    }   
+    }
 }
