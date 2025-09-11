@@ -8,6 +8,9 @@ int main() {
     //flashingLED();
     
     uart_init();
+    fdevopen(*uart_transmit, *uart_receive);
+    printf("Hei");
+
     while(1){
         uart_transmit('a');
         for(uint32_t i = 0; i < 400000; ++i);
