@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include "adc.h"
 
+uint8_t adcReads[4] = {0,0,0,0};
+
 void adcInit(){
     DDRD |= 1<<5; 
     TCCR1A = 1<<6 | 0b11; // non inverting mode, fast PWM
@@ -8,17 +10,18 @@ void adcInit(){
     OCR1A = 0; //reset counter every iteration
 }
 
-uint8_t adcRead(uint8_t channel){
-    char *adc = (char *) 0x1000;
+void adcRead(){
+    volatile char *adc = (volatile char *) 0x1000;
     
     adc[0] = 0;
-    //pause
+    for(uint16_t i = 0; i < 100; ++i); //wait a bit  30 too little, 70 ok, 100 safe
     
-    uint8_t value;
-    while(channel >= 0 && channel <= 3){
-        value = adc[0];
-        channel--;
+    uint8_t value = 0;
+    for(uint8_t channel = 0; channel <= 3; ++channel){
+        adcReads[channel] = adc[0];
     }
+}
 
-    return value;
+uint8_t adcGet(uint8_t channel){
+    return adcReads[channel];
 }
