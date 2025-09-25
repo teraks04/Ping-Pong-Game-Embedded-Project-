@@ -3,9 +3,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
+
+
 void flashingLED() {
     DDRA |= 1;
-    
+
     while(1){
         PORTA |= 1;
         for(uint32_t i = 0; i < 200000; ++i);
@@ -27,7 +29,7 @@ void HelloWorld(){
 void SRAM_test(void)
 {
     volatile char *ext_ram = (char *) 0x1400; // Start address for the SRAM
-    uint16_t ext_ram_size = 0x800;
+    uint16_t ext_ram_size = 0xC00;
     uint16_t write_errors = 0;
     uint16_t retrieval_errors = 0;
     printf("Starting SRAM test...\n\r");
@@ -64,4 +66,13 @@ void SRAM_test(void)
 
     printf("SRAM test completed with \n\r%4d errors in write phase and \n\r%4d errors in retrieval phase\n\r", 
            write_errors, retrieval_errors);
+}
+
+void joystickTest(){
+    while (1)
+    {
+        adcRead();
+        printf("joystick value: %i, %i\r\n", adcGet(1)-160, adcGet(0)-160);
+        for(uint32_t i = 0; i < 200000; ++i);
+    }
 }

@@ -14,7 +14,7 @@ void adcRead(){
     volatile char *adc = (volatile char *) 0x1000;
     
     adc[0] = 0;
-    for(uint16_t i = 0; i < 100; ++i); //wait a bit  30 too little, 70 ok, 100 safe
+    for(uint16_t i = 0; i < 100; ++i); // 30 too little, 70 ok, 100 safe
     
     uint8_t value = 0;
     for(uint8_t channel = 0; channel <= 3; ++channel){
