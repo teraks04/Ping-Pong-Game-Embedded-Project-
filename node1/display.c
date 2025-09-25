@@ -15,6 +15,8 @@ void dispInit(){
 
     commandMode();
 
+    spiChipSelect(spiDisplay);
+
     spiMasterTransmit(0xae);
     spiMasterTransmit(0xa1);
     spiMasterTransmit(0xda);
@@ -37,4 +39,17 @@ void dispInit(){
     spiMasterTransmit(0xa4);
     spiMasterTransmit(0xa6);
     spiMasterTransmit(0xaf);
+
+    spiMasterTransmit(0x81);
+    spiMasterTransmit(255);
+}
+
+void drawTestShape(){
+    dataMode();
+    spiMasterTransmit(0b00011000);
+    spiMasterTransmit(0b00011000);
+    spiMasterTransmit(0b10011001);
+    spiMasterTransmit(0b01011010);
+    spiMasterTransmit(0b00111100);
+    spiMasterTransmit(0b00011000);
 }
