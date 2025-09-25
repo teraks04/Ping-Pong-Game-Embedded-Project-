@@ -2,38 +2,24 @@
 #include "spi.h"
 uint8_t buttons[3];
 
-enum button {
-    buttR0,
-    buttR1,
-    buttR2,
-    buttR3,
-    buttR4,
-    buttR5,
-    RESERVED1,
-    RESERVED2,
-    buttL0,
-    buttL1,
-    buttL2,
-    buttL3,
-    buttL4,
-    buttL5,
-    buttL6,
-    RESERVED3,
-    buttNavUp,
-    buttNavDown,
-    buttNavLeft,
-    buttNavRight,
-    buttNavButt
-};
+void IOstandardDelay(){
+    for(uint32_t i = 0; i < 33; ++i);
+}
 
 void ioboardUpdateButtons(){
     spiChipSelect(spiIO);
     spiMasterTransmit(0x04);
+    IOstandardDelay();
     buttons[0] = spiMasterReceive(); //right
     buttons[1] = spiMasterReceive(); //left
     buttons[2] = spiMasterReceive(); //nav
+    spiChipSelect(spiDisplay);
 }
 
 uint8_t ioboardGetButton(uint8_t b){
     return buttons[b>>3] & 0b1<<(b&0b111);
+}
+
+uint8_t getCheckSum(){
+    return buttons[0]+buttons[1]+buttons[2];
 }

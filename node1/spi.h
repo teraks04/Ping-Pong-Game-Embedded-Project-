@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-enum spiChip {spiIO, spiDisplay, spiCAN}
+enum spiChip {spiIO, spiDisplay, spiCAN, spiOff = 8};
 
 void spiChipSelect(uint8_t p);
 

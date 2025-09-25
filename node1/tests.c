@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "spi.h"
+#include "ioboard.h"
+
 
 
 void flashingLED() {
@@ -72,7 +75,24 @@ void joystickTest(){
     while (1)
     {
         adcRead();
-        printf("joystick value: %i, %i\r\n", adcGet(1)-160, adcGet(0)-160);
+        printf("joystick value: %i, %i\r\n", adcGet(1), adcGet(0));
+        for(uint32_t i = 0; i < 200000; ++i);
+    }
+}
+
+void ioBoardTest(){
+    spiChipSelect(spiIO);
+    spiMasterTransmit(0x05);
+    for(uint32_t i = 0; i < 10000; ++i);
+    spiMasterTransmit(2);
+    spiMasterTransmit(1);
+    spiChipSelect(spiOff);
+
+
+    uint8_t i = 0;
+    while(1){
+        ioboardUpdateButtons();
+        printf("%d %u\n\r", getCheckSum(), ++i);
         for(uint32_t i = 0; i < 200000; ++i);
     }
 }

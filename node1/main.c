@@ -5,6 +5,8 @@
 #include "xmem.h"
 #include "adc.h"
 #include "spi.h"
+#include "display.h"
+#include "ioboard.h"
 
 
 
@@ -16,11 +18,6 @@ int main() {
     adcInit();
     spiMasterInit();
 
-    spiChipSelect(spiIO);
-    while(1){
-        spiMasterTransmit(~0b10110001);
-        for(uint32_t i = 0; i < 200000; ++i);
-    }
-
+    ioBoardTest();
 
 }

@@ -12,11 +12,13 @@ void spiChipSelect(uint8_t p){
 
 
 void spiMasterInit(void){
-    /* Set MOSI and SCK output, all others input */
-    DDRB = (1<<5)|(1<<6); 
+    // Set MOSI and SCK output
+    DDRB |= (1<<5)|(1<<7); 
+    //set miso to input
+    DDRB &= ~(1<<6); 
 
-    //Set PB2-PB4 as output we can use for chip select
-    DDRB |= (1<<3)|(1<<4)|(1<<5); 
+    //Set PB2-PB4 as output for chip select
+    DDRB |= (1<<2)|(1<<3)|(1<<4); 
 
     /* Enable SPI, Master, set clock rate fck/16 */
     SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
