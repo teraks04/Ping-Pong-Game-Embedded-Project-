@@ -1,18 +1,19 @@
 #include "spi.h"
+#include <avr/io.h>
 
 //DD_SCK er makro for pinnumeret til pinnnen som skal brukes til klokka
 
 void spiChipSelect(uint8_t p){
     uint8_t portmask = 0b11100;
     uint8_t activePort = 0b100<<p;
-    PORTB |= activeport;
-    PORTB &= !(portmask^activeport);
+    PORTB |= portmask^activePort;
+    PORTB &= ~(activePort);
 }
 
 
 void spiMasterInit(void){
     /* Set MOSI and SCK output, all others input */
-    DDRB = (1<<DBB5)|(1<<DD_SCK); 
+    DDRB = (1<<5)|(1<<6); 
 
     //Set PB2-PB4 as output we can use for chip select
     DDRB |= (1<<3)|(1<<4)|(1<<5); 
@@ -32,14 +33,14 @@ void spiMasterTransmit(char cData){
     //SPSR = status register (bit 7 of this register, is SPIF)
 }
 
-void spiMasterReceive(){
+uint8_t spiMasterReceive(){
     /* Start transmission */
     SPDR = 0;
 
     /* Wait for transmission complete */
     while(!(SPSR & (1<<SPIF)));
 
-    char data = SPDR;
+    uint8_t data = SPDR;
 
     return data;
 }

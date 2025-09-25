@@ -4,6 +4,7 @@
 #include "tests.h"
 #include "xmem.h"
 #include "adc.h"
+#include "spi.h"
 
 
 
@@ -13,8 +14,13 @@ int main() {
     uart_init();
     xmem_init();
     adcInit();
+    spiMasterInit();
 
-    joystickTest();
+    spiChipSelect(spiIO);
+    while(1){
+        spiMasterTransmit(~0b10110001);
+        for(uint32_t i = 0; i < 200000; ++i);
+    }
 
 
 }
