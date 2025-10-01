@@ -5,6 +5,7 @@
 
 #include "spi.h"
 #include "ioboard.h"
+#include "display.h"
 
 
 
@@ -95,4 +96,15 @@ void ioBoardTest(){
         printf("%d %u\n\r", getCheckSum(), ++i);
         for(uint32_t i = 0; i < 200000; ++i);
     }
+}
+
+void smearTest(){
+    blackFill();
+    pageModeAt(2, 0);
+    for(int i = 0 ; i<1; ++i)
+        spiMasterTransmit(0xff);
+    spiMasterTransmit(0);
+    for(uint32_t i = 0; i < 1000000; ++i);
+    for(int i = 0 ; i<126; ++i)
+        spiMasterTransmit(0xff);
 }

@@ -44,12 +44,52 @@ void dispInit(){
     spiMasterTransmit(255);
 }
 
-void drawTestShape(){
+void prepareScreenWrite(){
+    spiChipSelect(spiDisplay);
+    commandMode();
+    spiMasterTransmit(0b00100000);
+    spiMasterTransmit(0b00000000);
+    spiMasterTransmit(0b00100010); //page start/end
+    spiMasterTransmit(0b00000000);
+    spiMasterTransmit(0b00000111);
     dataMode();
-    spiMasterTransmit(0b00011000);
-    spiMasterTransmit(0b00011000);
-    spiMasterTransmit(0b10011001);
-    spiMasterTransmit(0b01011010);
-    spiMasterTransmit(0b00111100);
-    spiMasterTransmit(0b00011000);
+}
+void checkerboardFill(){
+    prepareScreenWrite();
+    uint8_t wrt = 0b11110000;
+    for(int i = 0; i<128*8; ++i){
+        spiMasterTransmit(wrt);
+        wrt = ~wrt;
+    }
+}
+void blackFill(){
+    prepareScreenWrite();
+    for(int i = 0; i<128*8; ++i){
+        spiMasterTransmit(0);
+    }
+}
+
+void dispIvert(uint8_t inv){
+    spiChipSelect(spiDisplay);
+    commandMode();
+    if(inv) spiMasterTransmit(0b10100111);
+    else spiMasterTransmit(0b10100110);
+}
+
+void pageModeAt(uint8_t row, uint8_t col){
+    spiChipSelect(spiDisplay);
+    commandMode();
+    spiMasterTransmit(0b00100000); //page mode
+    spiMasterTransmit(0b00000010);
+    spiMasterTransmit(0b10110000 | row & 0xF); //row select
+    spiMasterTransmit(0b00000000 | col & 0xF); //col lower nibble
+    spiMasterTransmit(0b00010000 | (col >> 4)); //col higher nibble
+    dataMode();
+}
+
+void loadImage(char* image){
+    prepareScreenWrite();
+    for(uint8_t x = 0; x<128; ++x)
+    for(uint8_t y = 0; y<8; ++y)
+    spiMasterTransmit(*(image++));
 }

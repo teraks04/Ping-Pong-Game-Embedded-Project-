@@ -8,49 +8,58 @@
 #include "display.h"
 #include "ioboard.h"
 
-void dataMode1(){
+
+void dataModel(void){
     PORTB |= 0b10;
 }
-void commandMode1(){
+void commandModel(void){
     PORTB &= ~0b10;
 }
 
+
 int main() {
-    //flashingLED();
-    
     uart_init();
     xmem_init();
     adcInit();
     spiMasterInit();
 
-    spiChipSelect(spiDisplay);
     dispInit();
-    //spiMasterTransmit(0b10100101);
-    //spiMasterTransmit(0b10100111); //inverse mode
 
-    /*for(uint8_t pag = 0; pag < 8; ++pag){
-        commandMode1();
+    /*checkerboardFill();
+    for(uint8_t pag = 0; pag < 8; ++pag){
+        commandModel();
         spiMasterTransmit(0b00100000);
         spiMasterTransmit(0b00000010);
         spiMasterTransmit(0b10110000+pag);
-        dataMode1();
+        dataModel();
         for(char i = 0; i<127; ++i){
             spiMasterTransmit(0x00);
         }
     }*/
-
-    commandMode1();
-    spiMasterTransmit(0b00100000);
-    spiMasterTransmit(0b00000000);
-    dataMode1();
-    uint8_t wrt = 0b10101010;
-    for(int i = 0; i<128*8; ++i){
-        spiMasterTransmit(wrt);
-        wrt = ~wrt;
+    blackFill();
+    uint8_t *addr = BASE_ADDRESS;
+    for(int16_t x = 0; x<128; ++x)
+    for(int16_t y = 0; y<64; ++y){
+        if((x-64)*(x-64)+(y-32)*(y-32) < 20*20)
+        addr[x+(y>>3)*128] |= 1<<(y&0b111);
+        else
+        addr[x+(y>>3)*128] &= ~(1<<(y&0b111));
     }
 
+    for(int16_t x = 0; x<128; ++x)
+    for(int16_t y = 0; y<64; ++y){
+        if((x-64)*(x-64)+(y-32)*(y-32) < 15*15)
+        addr[x+(y>>3)*128] &= ~(1<<(y&0b111));
+    }
+    loadImage(BASE_ADDRESS);
+
+
+    uint8_t stat = 0;
     while(1){
-        for(uint32_t i = 0; i < 200000; ++i);
+        for(uint32_t i = 0; i < 1000000; ++i);
+        //dispIvert(stat);
+        stat = !stat;
+        spiChipSelect(spiOff);
     }
 
 }

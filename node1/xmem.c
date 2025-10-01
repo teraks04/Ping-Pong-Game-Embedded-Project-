@@ -1,8 +1,6 @@
 #include "xmem.h"
 #include <avr/io.h>
 
-const uint16_t BASE_ADDRESS = 0x1400;
-
 xmem_init(){
     //Enable external memory interface
     MCUCR |= (1 << SRE);

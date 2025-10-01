@@ -24,6 +24,7 @@ enum button {
     buttNavButt
 };
 
+
 void ioboardUpdateButtons();
 uint8_t ioboardGetButton(uint8_t b);
 
