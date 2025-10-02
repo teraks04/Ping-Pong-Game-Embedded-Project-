@@ -7,7 +7,9 @@
     "tests.h": "c",
     "adc.h": "c",
     "stdio.h": "c",
-    "ioboard.h": "c"
+    "ioboard.h": "c",
+    "can.h": "c",
+    "cancont.h": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
