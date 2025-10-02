@@ -6,6 +6,8 @@
 #include "spi.h"
 #include "ioboard.h"
 #include "display.h"
+#include "xmem.h"
+#include "graphics.h"
 
 
 
@@ -99,7 +101,7 @@ void ioBoardTest(){
 }
 
 void smearTest(){
-    blackFill();
+    dispBlackFill();
     pageModeAt(2, 0);
     for(int i = 0 ; i<1; ++i)
         spiMasterTransmit(0xff);
@@ -107,4 +109,34 @@ void smearTest(){
     for(uint32_t i = 0; i < 1000000; ++i);
     for(int i = 0 ; i<126; ++i)
         spiMasterTransmit(0xff);
+}
+
+void circleTest(){
+    dispBlackFill();
+    uint8_t *addr = BASE_ADDRESS;
+    for(int16_t x = 0; x<128; ++x)
+    for(int16_t y = 0; y<64; ++y){
+        if((x-64)*(x-64)+(y-32)*(y-32) < 20*20)
+        addr[x+(y>>3)*128] |= 1<<(y&0b111);
+        else
+        addr[x+(y>>3)*128] &= ~(1<<(y&0b111));
+    }
+
+    for(int16_t x = 0; x<128; ++x)
+    for(int16_t y = 0; y<64; ++y){
+        if((x-64)*(x-64)+(y-32)*(y-32) < 15*15)
+        addr[x+(y>>3)*128] &= ~(1<<(y&0b111));
+    }
+    dispLoadImage(BASE_ADDRESS);
+}
+
+void testText(){
+    uint8_t offs = 0;
+    while(1){
+        for(uint32_t i = 0; i < 100000; ++i);
+        graphClear();
+        graphText((vec2){40, offs++}, "Hello World!|_#");
+        dispLoadImage(BASE_ADDRESS);
+        if(offs > 63) offs = 0;
+    }
 }

@@ -1,7 +1,7 @@
 #include "xmem.h"
 #include <avr/io.h>
 
-xmem_init(){
+void xmem_init(){
     //Enable external memory interface
     MCUCR |= (1 << SRE);
     SFIOR |= (1 << 5); //release pins 7-4

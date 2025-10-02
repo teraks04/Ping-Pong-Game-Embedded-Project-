@@ -13,48 +13,33 @@ void dispInit(){
     // D/C pin
     DDRB |= 0b10;
 
+    spiChipSelect(spiDisplay);
     commandMode();
 
-    spiChipSelect(spiDisplay);
-
-    spiMasterTransmit(0xae);
-    spiMasterTransmit(0xa1);
-    spiMasterTransmit(0xda);
-    spiMasterTransmit(0x12);
-    spiMasterTransmit(0xc8);
-    spiMasterTransmit(0xa8);
-    spiMasterTransmit(0x3f);
-    spiMasterTransmit(0xd5);
-    spiMasterTransmit(0x80);
-    spiMasterTransmit(0x81);
-    spiMasterTransmit(0x50);
-    spiMasterTransmit(0xd9);
-    spiMasterTransmit(0x21);
-    spiMasterTransmit(0x20);
-    spiMasterTransmit(0x02);
-    spiMasterTransmit(0xdb);
-    spiMasterTransmit(0x30);
-    spiMasterTransmit(0xad);
-    spiMasterTransmit(0x00);
-    spiMasterTransmit(0xa4);
-    spiMasterTransmit(0xa6);
-    spiMasterTransmit(0xaf);
-
-    spiMasterTransmit(0x81);
+    spiMasterTransmit(0xae); //disp off
+    spiMasterTransmit(0x81); //contrast control
     spiMasterTransmit(255);
+    spiMasterTransmit(0xa4); //disp from ram
+    spiMasterTransmit(0xa6); //normal display
+
+    spiMasterTransmit(0xa1); //zero at zero
+    spiMasterTransmit(0xc8); //com scan direction left-right
+    spiMasterTransmit(0xa8); //multiplex ratio 63
+    spiMasterTransmit(63);
+    spiMasterTransmit(0xaf); //disp on
 }
 
 void prepareScreenWrite(){
     spiChipSelect(spiDisplay);
     commandMode();
-    spiMasterTransmit(0b00100000);
+    spiMasterTransmit(0b00100000); //horizontal adressal mode
     spiMasterTransmit(0b00000000);
     spiMasterTransmit(0b00100010); //page start/end
     spiMasterTransmit(0b00000000);
     spiMasterTransmit(0b00000111);
     dataMode();
 }
-void checkerboardFill(){
+void dispCheckerboardFill(){
     prepareScreenWrite();
     uint8_t wrt = 0b11110000;
     for(int i = 0; i<128*8; ++i){
@@ -62,7 +47,7 @@ void checkerboardFill(){
         wrt = ~wrt;
     }
 }
-void blackFill(){
+void dispBlackFill(){
     prepareScreenWrite();
     for(int i = 0; i<128*8; ++i){
         spiMasterTransmit(0);
@@ -87,7 +72,7 @@ void pageModeAt(uint8_t row, uint8_t col){
     dataMode();
 }
 
-void loadImage(char* image){
+void dispLoadImage(char* image){
     prepareScreenWrite();
     for(uint8_t x = 0; x<128; ++x)
     for(uint8_t y = 0; y<8; ++y)
