@@ -16,7 +16,7 @@ void reset();
 void cancontRequestToSend(uint8_t buffer);
 char cancontRead(char address);
 void cancontWrite(char data, char address);
-char cancontReadStatus();
+char cancontReadStatus();  
 void cancontBitModify(char address,char mask,char data);
 
 
