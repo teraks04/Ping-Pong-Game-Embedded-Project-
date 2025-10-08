@@ -7,3 +7,4 @@ void ioBoardTest();
 void smearTest();
 void circleTest();
 void testText();
+void testMenu();

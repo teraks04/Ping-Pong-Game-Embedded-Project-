@@ -9,14 +9,7 @@
 #include "ioboard.h"
 #include "graphics.h"
 #include "cancont.h"
-
-
-void dataModel(void){
-    PORTB |= 0b10;
-}
-void commandModel(void){
-    PORTB &= ~0b10;
-}
+#include "menu.h"
 
 
 int main() {
@@ -26,7 +19,12 @@ int main() {
     spiMasterInit();
 
     dispInit();
-    printf("hi\n\r");
+
+    printf("%i\n\r", sizeof(MenuItem));
+
+    testMenu();
+
+    //printf("hi\n\r");
 
     cancontInit();
     #define TXB0D0 0b00110110
