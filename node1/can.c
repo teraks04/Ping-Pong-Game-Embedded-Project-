@@ -1,8 +1,4 @@
 #include "can.h"
-
-
-
-
 void canInit(){
     cancontWrite(0b01000000,0x0F); //Write to CANCTRL register,loopback mode
 }
@@ -39,4 +35,11 @@ void canSend(canMessage* message){
     
     //request to send 
     cancontRequestToSend(TXB_ALL);
+}
+
+canMessage canReceive(){
+    canMessage message;
+    //...
+
+    return message;
 }

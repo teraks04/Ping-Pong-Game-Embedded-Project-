@@ -6,3 +6,5 @@ typedef struct {
 } canMessage;
 
 void canInit();
+void canSend(canMessage* message);
+canMessage canReceive();
