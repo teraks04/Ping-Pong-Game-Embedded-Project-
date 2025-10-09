@@ -64,8 +64,15 @@ canMessage canReceive(){
     }
 
     // Read ID
-    uint16_t sidl = cancontRead(MCP_RXB0SIDL+bf);
-    uint16_t sidh = cancontRead(MCP_RXB0SIDH+bf);
+    uint16_t sidl = (uint8_t)cancontRead(MCP_RXB0SIDL+bf);
+    uint16_t sidh = (uint8_t)cancontRead(MCP_RXB0SIDH+bf);
+    //sidl &= 0xff;
+    //sidh &= 0xff;
+
+    //uint8_t test = (sidl&0xff)>>5;
+    //unsigned int test1 = test;
+
+    //printf("%u, %u\n\r", sidh&0xff, (sidl>>5)&0xff);
 
     message.id = (sidh << 3) | (sidl >> 5);
     // Read DLC

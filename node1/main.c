@@ -21,8 +21,6 @@ int main() {
 
     dispInit();
 
-    printf("%i\n\r", sizeof(MenuItem));
-
     cancontInit();
     canInit();
 
