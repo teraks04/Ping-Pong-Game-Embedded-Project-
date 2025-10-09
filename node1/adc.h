@@ -1,7 +1,5 @@
 #include <stdint.h>
 
-
-
 typedef struct {
     uint8_t x;
     uint8_t y;
@@ -11,5 +9,8 @@ void adcInit();
 void adcRead();
 uint8_t adcGet(uint8_t channel);
 
-void posCalibrate();
-pos_t posRead(void);
+void adcCalibrate();
+uint8_t joyDirectionX();
+uint8_t joyDirectionY();
+int8_t joyTrinaryX();
+int8_t joyTrinaryY();

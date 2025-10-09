@@ -27,18 +27,27 @@ void menuRender(Menu* men, uint8_t select){
     uint8_t topLine = select>3? select-3 : 0;
     uint8_t lastLine = men->count;
 
+
     graphFillOrthoQuad((vec2){0, (select-topLine)*6}, (vec2){127, (select-topLine)*6+6});
 
     if(lastLine-topLine > 10) lastLine = topLine + 10;
+
+    /*if(topLine = 0){
+        graphText((vec2){4, 0}, "return");
+        topLine++;
+    }*/
 
     for(uint8_t line = topLine; line < lastLine; ++line)
         graphText((vec2){4, (line-topLine)*6}, men->items[line].name);
 }
 
 Menu* menuEnter(Menu* men, uint8_t select){
-    printf("entering\n\r");
     if(men->items[select].name[0]=='M')
         return men->items[select].destAddress;
     void (*func)(void) = men->items[select].destAddress;
     func();
+}
+
+void menuLayer(Menu* men){
+    
 }

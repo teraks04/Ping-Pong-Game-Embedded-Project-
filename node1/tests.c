@@ -76,10 +76,19 @@ void SRAM_test(void)
 }
 
 void joystickTest(){
+    adcCalibrate();
     while (1)
     {
         adcRead();
-        printf("joystick value: %i, %i\r\n", adcGet(1), adcGet(0));
+        int8_t val1 = joyTrinaryX();
+        int val = val1;
+        printf("adc value: %u, %u, %i, %i\r\n", joyDirectionX() & 0xff, joyDirectionY() & 0xff, val, joyTrinaryY() & 0xff);
+        spiChipSelect(spiIO);
+        spiMasterTransmit(0x03);
+        IOstandardDelay();
+        printf("spi value: %i, %i, %i\r\n", spiMasterReceive(), spiMasterReceive(), spiMasterReceive());
+        spiChipSelect(spiOff);
+        
         for(uint32_t i = 0; i < 200000; ++i);
     }
 }
@@ -148,12 +157,12 @@ void testText(){
 void testMenu(){
     Menu testMenu;
     menuMake(&testMenu, 20);
-    menuAppend(&testMenu, "F option1", testText);
+    menuAppend(&testMenu, "F testJoy", joystickTest);
     menuAppend(&testMenu, "F option2", testText);
     menuAppend(&testMenu, "F option3", testText);
     menuAppend(&testMenu, "F option4", testText);
     menuAppend(&testMenu, "F option5", testText);
-    menuAppend(&testMenu, "F option6", circleTest);
+    menuAppend(&testMenu, "F testCircle", circleTest);
     uint8_t select = 0;
     printf("%i %i\n\r", testMenu.count, testMenu.maxCount);
     while(1){

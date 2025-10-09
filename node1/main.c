@@ -9,6 +9,7 @@
 #include "ioboard.h"
 #include "graphics.h"
 #include "cancont.h"
+#include "can.h"
 #include "menu.h"
 
 
@@ -22,10 +23,20 @@ int main() {
 
     printf("%i\n\r", sizeof(MenuItem));
 
-    testMenu();
+    //cancontInit();
+    //canInit();
 
-    //printf("hi\n\r");
+    canMessage mess;
+    mess.id = 0b101010101100;
+    mess.data[0]=0b11110010;
+    mess.dlc = 1;
+    while(0){
+        canSend(&mess);
+        for (uint16_t i = 0; i < 10000; i++);
+    }
 
+    
+    
     cancontInit();
     #define TXB0D0 0b00110110
     while(1){

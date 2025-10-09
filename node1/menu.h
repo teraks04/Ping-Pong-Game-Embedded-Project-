@@ -22,3 +22,5 @@ void menuMake(Menu* dest, uint8_t maxSize);
 void menuAppend(Menu* dest, const char* name, void* itemAddress);
 void menuRender(Menu* men, uint8_t select);
 Menu* menuEnter(Menu* men, uint8_t select);
+
+void menuLayer(Menu* men);

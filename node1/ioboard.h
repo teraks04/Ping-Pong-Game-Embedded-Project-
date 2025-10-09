@@ -28,3 +28,4 @@ void ioboardUpdateButtons();
 uint8_t ioboardGetButton(uint8_t b);
 
 uint8_t getCheckSum();
+void IOstandardDelay();

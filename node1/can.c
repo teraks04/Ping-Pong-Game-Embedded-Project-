@@ -1,6 +1,8 @@
 #include "can.h"
 void canInit(){
-    cancontWrite(0b01000000,0x0F); //Write to CANCTRL register,loopback mode
+    //cancontWrite(MCP_CANCTRL, 0b01000000); //Write to CANCTRL register,loopback mode
+    cancontWrite(MCP_CANCTRL, 0b00001000); //normal mode, one-shot
+    //cancontWrite(MCP_CANCTRL, 0b00000000); //normal mode, multi-shot
 }
 
 void canSend(canMessage* message){
@@ -10,11 +12,11 @@ void canSend(canMessage* message){
     if(!(ctrl & (1 << 3))){ //is TXREQ low?
         bf = 0;
     }
-    char ctrl =  cancontRead(MCP_TXB1CTRL);
+    ctrl =  cancontRead(MCP_TXB1CTRL);
     if(!(ctrl & (1 << 3))){
         bf = 16;
     }
-    char ctrl =  cancontRead(MCP_TXB2CTRL);
+    ctrl =  cancontRead(MCP_TXB2CTRL);
     if(!(ctrl & (1 << 3))){
         bf = 32;
     }
