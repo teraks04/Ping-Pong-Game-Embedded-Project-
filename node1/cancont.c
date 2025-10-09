@@ -20,7 +20,7 @@ char cancontRead(char address){
     return data;
 }
 
-void cancontWrite(char data, char address){
+void cancontWrite(char address,char data){
     spiChipSelect(spiCAN);
     spiMasterTransmit(0b00000010); //Ready write
     spiMasterTransmit(address);
