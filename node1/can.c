@@ -30,6 +30,7 @@ void canSend(canMessage* message){
     //id
     uint8_t id_high = (message->id >> 3) & 0xFF;
     uint8_t id_low  = (message->id & 0b111);  
+
     cancontWrite(MCP_TXB0SIDL+bf,id_low << 5);
     cancontWrite(MCP_TXB0SIDH+bf,id_high);
     //datalength
@@ -62,15 +63,13 @@ canMessage canReceive(){
         return message;
     }
 
-    //Read message
-    uint8_t id_high = (message.id >> 3) & 0xFF;
-    uint8_t id_low  = (message.id & 0b111);  
     // Read ID
-    uint16_t sidl = cancontRead(MCP_RXB0SIDH+bf);
-    uint16_t sidh = cancontRead(MCP_RXB0SIDL+bf);
+    uint16_t sidl = cancontRead(MCP_RXB0SIDL+bf);
+    uint16_t sidh = cancontRead(MCP_RXB0SIDH+bf);
+
     message.id = (sidh << 3) | (sidl >> 5);
     // Read DLC
-    message.dlc = 0b00000111 | cancontRead(MCP_RXB0DLC+bf);
+    message.dlc = 0b00001111 & cancontRead(MCP_RXB0DLC+bf);
     // Read data
     for (uint8_t idx = 0; idx < message.dlc; idx++){
         message.data[idx] = cancontRead(MCP_RXB0DATA + bf + idx);
