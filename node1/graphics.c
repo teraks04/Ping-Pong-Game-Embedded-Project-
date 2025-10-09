@@ -51,12 +51,42 @@ void graphText(vec2 loc, const char *str){
     while(*str != '\0'){
         for(int colm = 0; colm < FONT_SCALE.x; ++colm){
             uint8_t col = pgm_read_byte(FONT +FONT_SCALE.x*(*str - 32)+colm);
-            adr[colm] = uppermask & ((col >> constoffs) << upperoffs);
-            adr[colm + SCREEN_WIDTH] = lowermask & ((col >> constoffs) >> loweroffs);
+            adr[colm] ^= uppermask & ((col >> constoffs) << upperoffs);
+            adr[colm + SCREEN_WIDTH] ^= lowermask & ((col >> constoffs) >> loweroffs);
         }
         adr += FONT_SCALE.x;
         ++str;
     }
+}
+
+void graphFillOrthoQuad(const vec2 min, const vec2 max){
+    uint8_t* pageadr = BASE_ADDRESS + (min.y>>3)*SCREEN_WIDTH;
+    uint8_t pages = (max.y>>3) - (min.y>>3) + 1;
+
+    //first page, special case if only page
+    uint8_t topMask = 0xff << (min.y&0b111);
+    uint8_t bottomMask = 0xff >> (8-(max.y&0b111));
+    if(pages == 1){
+        topMask &= bottomMask;
+        for(uint8_t x = min.x; x < max.x; ++x)
+            pageadr[x] |= topMask;
+        return;
+    }
+
+    for(uint8_t x = min.x; x < max.x; ++x)
+        pageadr[x] |= topMask;
+
+    //middle pages
+    while(pages > 2){
+        --pages;
+        pageadr += SCREEN_WIDTH;
+        for(uint8_t x = min.x; x < max.x; ++x)
+            pageadr[x] = 0xff;
+    }
+
+    //bottom page
+    pageadr += SCREEN_WIDTH;
+    for(uint8_t x = min.x; x < max.x; ++x)
+        pageadr[x] |= bottomMask;
     
-    //graph upper row
 }

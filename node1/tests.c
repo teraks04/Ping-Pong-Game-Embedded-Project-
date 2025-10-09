@@ -8,6 +8,7 @@
 #include "display.h"
 #include "xmem.h"
 #include "graphics.h"
+#include "menu.h"
 
 
 
@@ -95,7 +96,10 @@ void ioBoardTest(){
     uint8_t i = 0;
     while(1){
         ioboardUpdateButtons();
-        printf("%d %u\n\r", getCheckSum(), ++i);
+        printf("\n\r%d %u\n\r", getCheckSum(), ++i);
+        for(uint8_t i = 0; i<24; ++i){
+            printf("%i", (ioboardGetButton(i)==0)? 0: 1);
+        }
         for(uint32_t i = 0; i < 200000; ++i);
     }
 }
@@ -138,5 +142,29 @@ void testText(){
         graphText((vec2){40, offs++}, "Hello World!|_#");
         dispLoadImage(BASE_ADDRESS);
         if(offs > 63) offs = 0;
+    }
+}
+
+void testMenu(){
+    Menu testMenu;
+    menuMake(&testMenu, 20);
+    menuAppend(&testMenu, "F option1", testText);
+    menuAppend(&testMenu, "F option2", testText);
+    menuAppend(&testMenu, "F option3", testText);
+    menuAppend(&testMenu, "F option4", testText);
+    menuAppend(&testMenu, "F option5", testText);
+    menuAppend(&testMenu, "F option6", circleTest);
+    uint8_t select = 0;
+    printf("%i %i\n\r", testMenu.count, testMenu.maxCount);
+    while(1){
+        for(uint32_t i = 0; i < 100000; ++i);
+        ioboardUpdateButtons();
+        if(ioboardGetButton(buttNavUp)) select--;
+        if(ioboardGetButton(buttNavDown)) select++;
+        if(select > 5) select = 0;
+        if(ioboardGetButton(buttNavButt)) menuEnter(&testMenu, select);
+        graphClear();
+        menuRender(&testMenu, select);
+        dispLoadImage(BASE_ADDRESS);
     }
 }

@@ -9,7 +9,8 @@
     "stdio.h": "c",
     "ioboard.h": "c",
     "can.h": "c",
-    "cancont.h": "c"
+    "cancont.h": "c",
+    "limits": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",

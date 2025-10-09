@@ -16,12 +16,11 @@ enum button {
     buttL4,
     buttL5,
     buttL6,
-    RESERVED3,
-    buttNavUp,
+    buttNavButt=16,
+    buttNavRight,
     buttNavDown,
     buttNavLeft,
-    buttNavRight,
-    buttNavButt
+    buttNavUp
 };
 
 

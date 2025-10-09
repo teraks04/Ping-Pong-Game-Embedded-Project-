@@ -10,6 +10,7 @@
 
 #include <avr/pgmspace.h>
 
+
 // Font 8x8 - Large
 const unsigned char PROGMEM font8[95][8] = {
 	{0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000}, //
@@ -207,6 +208,7 @@ const unsigned char PROGMEM font5[95][5] = {
 	{0b00000000,0b01000001,0b00110110,0b00001000,0b00000000}, // }
 	{0b00000010,0b00000001,0b00000011,0b00000010,0b00000001}, // ~
 	};
+
 
 // Font 4x6 - Small
 const unsigned char PROGMEM font4[95][4] = {
