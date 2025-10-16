@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "sam.h"
+#include "uart.h"
+#include "can.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -16,15 +18,25 @@
 int main()
 {
     SystemInit();
+    CanInit init;
+    init.brp = 5; //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
+    init.propag = 4; //probably fine
+    init.phase1 = 5;
+    init.phase2 = 5;
+    init.sjw = 3; //hoppebredde, feks er vi to tidskvanta off sync tidspunktet, så juster vi med to tidskvanta. Er det over 3 er de noe gærent. 
+    init.smp = 0; //
+
+    can_init(init, 0);
 
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
 
     //Uncomment after including uart above
-    //uart_init(/*cpufreq*/, /*baud*/);
-    //printf("Hello World\n\r");
+    uart_init(84000000, 9600);
+    printf("Hello World\r\n");
+
+
 
     Pio *piob = PIOB;
-
     piob->PIO_PER = 1<<13;  //servo sig enable
     piob->PIO_OER = 1<<13; //output enable
     while(1){

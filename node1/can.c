@@ -1,8 +1,9 @@
 #include "can.h"
 void canInit(){
-    cancontWrite(MCP_CANCTRL, 0b01000000); //loopback mode
+    //cancontWrite(MCP_CANCTRL, 0b01000000); //loopback mode
     //cancontWrite(MCP_CANCTRL, 0b00001000); //normal mode, one-shot
     //cancontWrite(MCP_CANCTRL, 0b00000100); //normal mode, multi-shot, clock output
+    cancontWrite(MCP_CANCTRL, 0b00000000); //normal mode, multi-shot
 }
 
 void canSend(canMessage* message){

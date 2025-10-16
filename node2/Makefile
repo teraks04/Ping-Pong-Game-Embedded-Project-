@@ -8,7 +8,8 @@ MCUTYPE = __SAM3X8E__
 SOURCE_FILES = \
 	$(BOOTUP) \
 	main.c \
-#	../path_to/uart.c \
+	uart.c \
+	can.c \
 #   filename1.c \
 #   filename2.c \
 #	filenameN.c
@@ -37,6 +38,7 @@ $(BUILD_DIR):
 
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) $< -o $@
+	#$(CC) -S $(CFLAGS) $< -o $(BUILD_DIR)/$*.s
 	#$(CC) -MM $(CFLAGS) $< > $@.d
 
 $(BUILD_DIR)/%.o : %.s | $(BUILD_DIR)
