@@ -49,5 +49,5 @@ Menu* menuEnter(Menu* men, uint8_t select){
 }
 
 void menuLayer(Menu* men){
-    
+    return;
 }

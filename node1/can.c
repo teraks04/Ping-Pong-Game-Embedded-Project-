@@ -9,18 +9,17 @@ void canSend(canMessage* message){
     char bf = 0; //bufferoffset
     //determine a buffer that is free
     char ctrl =  cancontRead(MCP_TXB0CTRL);
-    if(!(ctrl & (1 << 3))){ //is TXREQ low?
+    if(!(ctrl & (1 << 4))){ //is TXREQ low?
         bf = 0;
     }
     ctrl =  cancontRead(MCP_TXB1CTRL);
-    if(!(ctrl & (1 << 3))){
+    if(!(ctrl & (1 << 4))){
         bf = 16;
     }
     ctrl =  cancontRead(MCP_TXB2CTRL);
-    if(!(ctrl & (1 << 3))){
+    if(!(ctrl & (1 << 4))){
         bf = 32;
     }
-    bf = 0;
 
     //write to this buffer
     //data
@@ -37,7 +36,7 @@ void canSend(canMessage* message){
     cancontWrite(MCP_TXB0DLC+bf,message->dlc);  //maybe set RTR
     
     //request to send 
-    cancontRequestToSend(TXB0);
+    cancontRequestToSend(TXB0+(bf>>4));
     //cancontBitModify(MCP_TXB0CTRL, 0b100, 0b100);
 }
 
