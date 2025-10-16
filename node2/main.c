@@ -20,7 +20,7 @@ int main()
     SystemInit();
     CanInit init;
     init.brp = 5; //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
-    init.propag = 4; //probably fine
+    init.propag = 3; //probably fine
     init.phase1 = 5;
     init.phase2 = 5;
     init.sjw = 3; //hoppebredde, feks er vi to tidskvanta off sync tidspunktet, så juster vi med to tidskvanta. Er det over 3 er de noe gærent. 
@@ -33,6 +33,20 @@ int main()
     //Uncomment after including uart above
     uart_init(84000000, 9600);
     printf("Hello World\r\n");
+
+    CanMsg mess;
+    mess.id = 0b01101100100;
+    mess.byte[0]=51;
+    mess.byte[1]=0b11110010;
+    mess.byte[2]=0b11110010;
+    mess.byte[3]=0b11110010;
+    mess.byte[4]=0b11110010;
+    mess.byte[5]=0b11110010;
+    mess.byte[6]=0b11110010;
+    mess.byte[7]=0b11110010;
+    mess.length = 8;
+    
+    can_tx(mess);
 
 
 

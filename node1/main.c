@@ -36,11 +36,9 @@ int main() {
     mess.data[7]=0b11110010;
     mess.dlc = 8;
     
-    while(1){
-        canSend(&mess);
-        for(int i = 0; i < 10000; ++i);
-        return;
-    }
+    canSend(&mess);
+    for(int i = 0; i < 10000; ++i);
+    
     /*canMessage messr = canReceive();
     uint8_t sig = messr.data[0];
     int sign = sig;
