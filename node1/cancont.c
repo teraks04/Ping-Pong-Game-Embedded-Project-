@@ -1,16 +1,18 @@
 #include "cancont.h"
 
+
 void reset(){
     spiChipSelect(spiCAN);
     spiMasterTransmit(0b11000000);
     spiChipSelect(spiOff);
 }
 
+
+
 void cancontInit(){
     reset();
     cancontWrite(MCP_CANCTRL, 0b10000000); //config mode
-    //0; //TQ = 2 x (BRP + 1)/FOSC
-    uint8_t brp = 1; //(brp+1)/16MHz = 0.25 µs. *(3+5+5)=3.25µs
+    uint8_t brp = 1; //(brp+1)/16MHz/2
     uint8_t sjw = 1 << 6;
     cancontWrite(MCP_CNF1,brp | sjw);
     uint8_t propag = 1;

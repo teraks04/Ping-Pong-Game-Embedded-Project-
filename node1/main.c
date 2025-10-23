@@ -37,7 +37,7 @@ int main() {
     mess.dlc = 8;
     
     //canSend(&mess);
-    while(1){
+    while(0){
         while(!canReceived());
 
         canMessage messr = canReceive();

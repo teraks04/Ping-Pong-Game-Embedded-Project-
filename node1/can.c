@@ -1,5 +1,14 @@
 #include "can.h"
 #include "avr/io.h"
+#include <avr/interrupt.h>
+
+ISR(INT1_vect) {
+    canMessage messr = canReceive();
+
+    uint8_t sig = messr.data[0];
+    int sign = sig;
+    printf("%i\n\r", sig);
+}
 
 void canInit(){
     //cancontWrite(MCP_CANCTRL, 0b01000000); //loopback mode
@@ -11,10 +20,9 @@ void canInit(){
     DDRD &= ~(1 << PD3); 
     PORTD |= (1 << PD3);
     
-    MCUCR &= ~(1 << ISC10);
-    MCUCR |= (1 << ISC11);
+    MCUCR = MCUCR & ~(0b1100) | 0b1000;  //interrupt on falling edge
 
-    GICR |= (1 << INT1);
+    GICR |= (1 << INT1); //enable interrupt
 }
 
 void canSend(canMessage* message){
