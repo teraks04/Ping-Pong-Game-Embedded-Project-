@@ -14,4 +14,6 @@ void spiMasterTransmit(char cData);
 
 uint8_t spiMasterReceive();
 
+uint8_t spiGetChipSelect();
+
 #endif

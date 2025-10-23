@@ -46,16 +46,13 @@ int main()
     mess.byte[6]=0b11110010;
     mess.byte[7]=0b11110010;
     mess.length = 8;
+
+    
     
 
-    Pio *piob = PIOB;
-    piob->PIO_PER = 1<<13;  //servo sig enable
-    piob->PIO_OER = 1<<13; //output enable
     while(1){
-        piob->PIO_SODR = 1<<13; //set
-        for(int i = 0; i<1000; ++i);
-        piob->PIO_CODR = 1<<13; //clear
-        for(int i = 0; i<1000; ++i);
+        for(int i = 0; i<100000; ++i);
+        printf("%i, %i\n\r", getJoyX(), getJoyY());
     }
 
 

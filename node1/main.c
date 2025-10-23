@@ -37,11 +37,11 @@ int main() {
     mess.dlc = 8;
     
     uint8_t i = 0;
-    while(0){
-        ++i;
-        mess.data[0]=i;
-        canSend(&mess);
-        for(uint32_t w = 0; w < 10000; ++w);
+
+    while(1){
+        dispLoadImage(BASE_ADDRESS);
+
+        for(uint16_t i = 1; i>0; ++i);
     }
     
     while(1);
