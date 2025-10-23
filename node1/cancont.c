@@ -8,13 +8,6 @@ void reset(){
 
 void cancontInit(){
     reset();
-    //set in config mode
-    // init.brp = 5; //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
-    // init.propag = 4; //probably fine
-    // init.phase1 = 5;
-    // init.phase2 = 5;
-    // init.sjw = 3; //hoppebredde, feks er vi to tidskvanta off sync tidspunktet, så juster vi med to tidskvanta. Er det over 3 er de noe gærent. 
-    // init.smp = 0; //
     cancontWrite(MCP_CANCTRL, 0b10000000); //config mode
     //0; //TQ = 2 x (BRP + 1)/FOSC
     uint8_t brp = 1; //(brp+1)/16MHz = 0.25 µs. *(3+5+5)=3.25µs
@@ -27,6 +20,9 @@ void cancontInit(){
     cancontWrite(MCP_CNF2,propag | phase1 | btlmode | smp);
     uint8_t phase2 = 2;
     cancontWrite(MCP_CNF3, phase2);
+
+    //Interrupt 
+    cancontWrite(MCP_CANINTE,0b00000011); //Interupt on receive bf0 or bf1
 }
 
 char cancontRead(char address){
