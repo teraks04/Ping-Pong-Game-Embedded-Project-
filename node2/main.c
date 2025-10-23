@@ -27,7 +27,7 @@ int main()
     init.sjw = 1; //hoppebredde, feks er vi to tidskvanta off sync tidspunktet, så juster vi med to tidskvanta. Er det over 3 er de noe gærent. 
     init.smp = 0; //
 
-    can_init(init, 0);
+    can_init(init, 1);
 
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
 
@@ -47,15 +47,6 @@ int main()
     mess.byte[7]=0b11110010;
     mess.length = 8;
     
-    for(uint8_t i = 0; 1; ++i){
-        mess.byte[0]=i;
-        can_tx(mess);
-        for(int w = 0; w < 100000; ++w);
-    }
-    //while(!can_rx(&mess));
-        
-    //printf("%i\n\r", mess.byte[0]);
-
 
     Pio *piob = PIOB;
     piob->PIO_PER = 1<<13;  //servo sig enable

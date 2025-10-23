@@ -36,23 +36,15 @@ int main() {
     mess.data[7]=0b11110010;
     mess.dlc = 8;
     
-    //canSend(&mess);
+    uint8_t i = 0;
     while(0){
-        while(!canReceived());
-
-        canMessage messr = canReceive();
-
-        uint8_t sig = messr.data[0];
-        int sign = sig;
-        printf("%i\n\r", sig);
+        ++i;
+        mess.data[0]=i;
+        canSend(&mess);
+        for(uint32_t w = 0; w < 10000; ++w);
     }
     
-    for(int i = 0; i < 10000; ++i);
-    
-    /*canMessage messr = canReceive();
-    uint8_t sig = messr.data[0];
-    int sign = sig;
-    printf("%i", sig);*/
+    while(1);
 
     return 0;
 }

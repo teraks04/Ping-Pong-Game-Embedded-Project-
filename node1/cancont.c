@@ -1,18 +1,15 @@
 #include "cancont.h"
 
-
 void reset(){
     spiChipSelect(spiCAN);
     spiMasterTransmit(0b11000000);
     spiChipSelect(spiOff);
 }
 
-
-
 void cancontInit(){
     reset();
     cancontWrite(MCP_CANCTRL, 0b10000000); //config mode
-    uint8_t brp = 1; //(brp+1)/16MHz/2
+    uint8_t brp = 1; //(brp+1)/16MHz
     uint8_t sjw = 1 << 6;
     cancontWrite(MCP_CNF1,brp | sjw);
     uint8_t propag = 1;
@@ -23,8 +20,8 @@ void cancontInit(){
     uint8_t phase2 = 2;
     cancontWrite(MCP_CNF3, phase2);
 
-    //Interrupt 
-    cancontWrite(MCP_CANINTE,0b00000011); //Interupt on receive bf0 or bf1
+    cancontWrite(MCP_CANINTE, 0b11); //interupt on signal buffer 1 or 0
+
 }
 
 char cancontRead(char address){
