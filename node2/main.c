@@ -19,11 +19,12 @@ int main()
 {
     SystemInit();
     CanInit init;
-    init.brp = 5; //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
-    init.propag = 3; //probably fine
-    init.phase1 = 5;
-    init.phase2 = 5;
-    init.sjw = 3; //hoppebredde, feks er vi to tidskvanta off sync tidspunktet, så juster vi med to tidskvanta. Er det over 3 er de noe gærent. 
+    //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
+    init.brp = 20;//41;//9; // 85/(10)
+    init.propag = 1; //probably fine
+    init.phase1 = 2;
+    init.phase2 = 2;
+    init.sjw = 1; //hoppebredde, feks er vi to tidskvanta off sync tidspunktet, så juster vi med to tidskvanta. Er det over 3 er de noe gærent. 
     init.smp = 0; //
 
     can_init(init, 0);
@@ -46,8 +47,14 @@ int main()
     mess.byte[7]=0b11110010;
     mess.length = 8;
     
-    can_tx(mess);
-
+    for(uint8_t i = 0; 1; ++i){
+        mess.byte[0]=i;
+        can_tx(mess);
+        for(int w = 0; w < 100000; ++w);
+    }
+    //while(!can_rx(&mess));
+        
+    //printf("%i\n\r", mess.byte[0]);
 
 
     Pio *piob = PIOB;
@@ -55,7 +62,9 @@ int main()
     piob->PIO_OER = 1<<13; //output enable
     while(1){
         piob->PIO_SODR = 1<<13; //set
+        for(int i = 0; i<1000; ++i);
         piob->PIO_CODR = 1<<13; //clear
+        for(int i = 0; i<1000; ++i);
     }
 
 

@@ -1,9 +1,20 @@
 #include "can.h"
+#include "avr/io.h"
+
 void canInit(){
     //cancontWrite(MCP_CANCTRL, 0b01000000); //loopback mode
     //cancontWrite(MCP_CANCTRL, 0b00001000); //normal mode, one-shot
     //cancontWrite(MCP_CANCTRL, 0b00000100); //normal mode, multi-shot, clock output
     cancontWrite(MCP_CANCTRL, 0b00000000); //normal mode, multi-shot
+
+    //interupt pin
+    DDRD &= ~(1 << PD3); 
+    PORTD |= (1 << PD3);
+    
+    MCUCR &= ~(1 << ISC10);
+    MCUCR |= (1 << ISC11);
+
+    GICR |= (1 << INT1);
 }
 
 void canSend(canMessage* message){
@@ -86,4 +97,9 @@ canMessage canReceive(){
     cancontBitModify(MCP_CANINTF, (1 << bf/16), 0);
 
     return message;
+}
+
+uint8_t canReceived(){
+    uint8_t cainintf = cancontRead(MCP_CANINTF);
+    return cainintf & 0b11;
 }

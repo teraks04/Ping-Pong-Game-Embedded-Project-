@@ -8,3 +8,4 @@ typedef struct {
 void canInit();
 void canSend(canMessage* message);
 canMessage canReceive();
+uint8_t canReceived();
