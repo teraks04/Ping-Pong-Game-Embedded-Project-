@@ -34,10 +34,6 @@ void adcInit(){
     TCCR1B = 1 | 0b11<<3; // prescaler 1, fast PWM
     OCR1A = 0; //reset counter every iteration
     adcCalibrate();
-
-    TCCR0 = 0b00001101; //CTC, prescaler 1024
-    OCR0 = 97; //5Mhz/1024/97 = 50 Hz
-    TIMSK |= 0b01; //enable interrupt on overflow
 }
 
 uint8_t adcGet(uint8_t channel){
@@ -68,15 +64,3 @@ int8_t joyTrinaryY(){
     return 0;
 }
 
-ISR(TIMER0_COMP_vect) {
-    uint8_t selbuf = spiGetChipSelect();
-    spiChipSelect(spiOff);
-    adcRead();
-    canMessage mess;
-    mess.id = 1;
-    mess.dlc = 2;
-    mess.data[0]=joyDirectionX();
-    mess.data[1]=joyDirectionY();
-    canSend(&mess);
-    spiChipSelect(selbuf);
-}

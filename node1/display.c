@@ -35,8 +35,11 @@ void prepareScreenWrite(){
     spiMasterTransmit(0b00100000); //horizontal adressal mode
     spiMasterTransmit(0b00000000);
     spiMasterTransmit(0b00100010); //page start/end
-    spiMasterTransmit(0b00000000);
-    spiMasterTransmit(0b00000111);
+    spiMasterTransmit(0);
+    spiMasterTransmit(7);
+    spiMasterTransmit(0b00100001); //column start/end
+    spiMasterTransmit(0);
+    spiMasterTransmit(127);
     dataMode();
 }
 void dispCheckerboardFill(){
@@ -74,7 +77,8 @@ void pageModeAt(uint8_t row, uint8_t col){
 
 void dispLoadImage(char* image){
     prepareScreenWrite();
-    for(uint8_t x = 0; x<128; ++x)
-    for(uint8_t y = 0; y<8; ++y)
+    //for(uint8_t x = 0; x<128; ++x)
+    //for(uint8_t y = 0; y<8; ++y)
+    for(uint16_t prog = 0; prog<128*8; ++prog)
     spiMasterTransmit(*(image++));
 }

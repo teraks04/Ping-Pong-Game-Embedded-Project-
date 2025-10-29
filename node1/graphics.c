@@ -90,3 +90,15 @@ void graphFillOrthoQuad(const vec2 min, const vec2 max){
         pageadr[x] |= bottomMask;
     
 }
+
+char* console[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+void consoleLineSet(uint8_t loc, char* str){
+    console[loc] = str;
+}
+
+void graphConsole(){
+    for(uint8_t r = 0; r<10; ++r)
+    if(console[r] != 0)
+        graphText((vec2){0, r*FONT_SCALE.y}, console[r]);
+}

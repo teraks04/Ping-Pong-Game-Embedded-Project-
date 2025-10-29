@@ -18,5 +18,8 @@ void graphText(vec2 loc, const char *str);
 void graphReFont(uint8_t *const ft, vec2 dims);
 void graphFillOrthoQuad(const vec2 min, const vec2 max);
 
+void consoleLineSet(uint8_t loc, char* str);
+void graphConsole();
+
 
 #endif /* GRAPHICS_H_ */

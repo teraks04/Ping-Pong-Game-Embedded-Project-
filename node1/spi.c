@@ -29,6 +29,10 @@ void spiMasterInit(void){
     /* Enable SPI, Master, set clock rate fck/4 */
     SPCR = (1<<SPE)|(1<<MSTR)|(0b00<<SPR0);
     SPSR |= 0; //fck / 4
+
+    /* Enable SPI, Master, set clock rate fck/16 */
+    //SPCR = (1<<SPE)|(1<<MSTR)|(0b01<<SPR0);
+    //SPSR |= 0; //fck / 16
 }
 
 void spiMasterTransmit(char cData){

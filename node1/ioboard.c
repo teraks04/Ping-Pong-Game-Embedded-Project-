@@ -13,7 +13,7 @@ void ioboardUpdateButtons(){
     buttons[0] = spiMasterReceive(); //right
     buttons[1] = spiMasterReceive(); //left
     buttons[2] = spiMasterReceive(); //nav
-    spiChipSelect(spiDisplay);
+    spiChipSelect(spiOff);
 }
 
 uint8_t ioboardGetButton(uint8_t b){

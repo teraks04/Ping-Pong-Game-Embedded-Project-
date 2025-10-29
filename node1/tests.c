@@ -101,9 +101,25 @@ void ioBoardTest(){
     spiMasterTransmit(1);
     spiChipSelect(spiOff);
 
+    char butts[30];
+    consoleLineSet(1, butts);
+    while(1){
+        ioboardUpdateButtons();
+        for(uint8_t i = 0; i<24; ++i){
+            butts[i] = (ioboardGetButton(i)==0)? '0': '1';
+        }
+        butts[24] = '\0';
+        graphClear();
+        graphConsole();
+        dispLoadImage(BASE_ADDRESS);
+        for(uint8_t i = 0; i<24; ++i){
+            printf("%i", (ioboardGetButton(i)==0)? 0: 1);
+        }
+        for(uint32_t i = 0; i < 200000; ++i);
+    }
 
     uint8_t i = 0;
-    while(1){
+    while(0){
         ioboardUpdateButtons();
         printf("\n\r%d %u\n\r", getCheckSum(), ++i);
         for(uint8_t i = 0; i<24; ++i){
