@@ -19,6 +19,7 @@ void adc_init(){
 }
 
 uint16_t adc_read(){
+    //reference voltage pin ADVREF???????????
     REG_ADC_CR = 0b10; //start conversion
     while(!(REG_ADC_CR & 0b0)); //checks end of conversion flag for channel 0
     return REG_ADC_CDR; //reads data in channel 0
