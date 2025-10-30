@@ -9,6 +9,7 @@
 #include "xmem.h"
 #include "graphics.h"
 #include "menu.h"
+#include "adc.h"
 
 
 

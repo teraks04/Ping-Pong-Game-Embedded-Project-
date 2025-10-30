@@ -12,6 +12,7 @@ SOURCE_FILES = \
 	can.c \
 	pwm.c \
 	time.c \
+	adc.c \
 	#can_interrupt.c \
 	#can_controller.c \
 #	filenameN.c

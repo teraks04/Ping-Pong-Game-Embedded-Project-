@@ -5,6 +5,7 @@
 #include "can.h"
 #include "pwm.h"
 #include "time.h"
+#include "adc.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -20,7 +21,11 @@
 int main()
 {
     SystemInit();
+    WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
     servSigEnable();
+    adc_init();
+    
+    
     CanInit init;
 
     init.brp = 20;// 84/(21)
@@ -32,39 +37,35 @@ int main()
 
     can_init(init, 1);
 
-    WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
-
-    //Uncomment after including uart above
     uart_init(84000000, 9600);
     printf("Hello World\r\n");
 
-    CanMsg mess;
-    mess.id = 0b01101100100;
-    mess.byte[0]=51;
-    mess.byte[1]=0b11110010;
-    mess.byte[2]=0b11110010;
-    mess.byte[3]=0b11110010;
-    mess.byte[4]=0b11110010;
-    mess.byte[5]=0b11110010;
-    mess.byte[6]=0b11110010;
-    mess.byte[7]=0b11110010;
-    mess.length = 8;
-
     
-    
+    uint8_t lastIR = 0;
+    uint16_t goalcount = 0;
     uint32_t lowp = 50*100;
     while(1){
         //for(int i = 0; i<100000; ++i);
         time_spinFor(msecs(10));
-        //printf("%i, %i\n\r", getJoyX(), getJoyY());
 
-        lowp = lowp*90/100 + ((uint32_t)getJoyX())*10;
+        lowp = lowp*85/100 + ((uint32_t)getJoyX())*15;
         uint16_t servdt = lowp / 100;
         if(servdt < 35) servdt = 35;
         if(servdt > 212) servdt = 212;
         servdt = (servdt - 35)*(98*2)/177;
         servDuty(servdt);
+        
+        uint8_t ir = adc_read()<400? 1:0;
+        if(ir && !lastIR) {
+            printf("Goal!!!!!!!!!!! #%u\n\r", ++goalcount);
 
+            CanMsg ms;
+            ms.id = 0;
+            ms.length = 1;
+            ms.byte[0]=goalcount;
+            can_tx(ms);
+        }
+        lastIR = ir;
     }
 
 

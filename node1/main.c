@@ -37,12 +37,12 @@ int main() {
     mess.dlc = 8;
     
     uint8_t i = 0;
-    dispLoadImage(BASE_ADDRESS);
+    //dispLoadImage(BASE_ADDRESS);
+    dispBlackFill();
+    testMenu();
 
-    while(1){
-
+    while(0){
         for(uint16_t i = 1; i>0; ++i);
-        dispBlackFill();
     }
     
     while(1);

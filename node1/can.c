@@ -8,7 +8,7 @@ ISR(INT0_vect) {
 
     uint8_t sig = messr.data[0];
     int sign = sig;
-    printf("%i\n\r", sig);
+    printf("c:%i\n\r", sig);
 }
 
 
