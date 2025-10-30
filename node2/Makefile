@@ -10,6 +10,8 @@ SOURCE_FILES = \
 	main.c \
 	uart.c \
 	can.c \
+	pwm.c \
+	time.c \
 	#can_interrupt.c \
 	#can_controller.c \
 #	filenameN.c

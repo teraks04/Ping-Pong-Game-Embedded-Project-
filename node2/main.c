@@ -3,6 +3,8 @@
 #include "sam.h"
 #include "uart.h"
 #include "can.h"
+#include "pwm.h"
+#include "time.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -18,9 +20,10 @@
 int main()
 {
     SystemInit();
+    servSigEnable();
     CanInit init;
-    //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
-    init.brp = 20;//41;//9; // 85/(10)
+
+    init.brp = 20;// 84/(21)
     init.propag = 1; //probably fine
     init.phase1 = 2;
     init.phase2 = 2;
@@ -49,10 +52,19 @@ int main()
 
     
     
-
+    uint32_t lowp = 50*100;
     while(1){
-        for(int i = 0; i<100000; ++i);
-        printf("%i, %i\n\r", getJoyX(), getJoyY());
+        //for(int i = 0; i<100000; ++i);
+        time_spinFor(msecs(10));
+        //printf("%i, %i\n\r", getJoyX(), getJoyY());
+
+        lowp = lowp*90/100 + ((uint32_t)getJoyX())*10;
+        uint16_t servdt = lowp / 100;
+        if(servdt < 35) servdt = 35;
+        if(servdt > 212) servdt = 212;
+        servdt = (servdt - 35)*(98*2)/177;
+        servDuty(servdt);
+
     }
 
 
