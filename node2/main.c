@@ -3,6 +3,8 @@
 #include "sam.h"
 #include "uart.h"
 #include "can.h"
+#include "pwm.h"
+#include "time.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -18,9 +20,10 @@
 int main()
 {
     SystemInit();
+    servSigEnable();
     CanInit init;
-    //clock from 48 to 8 MHz  48/(5+1), 125 ns pr clock =: 1 tidskvanta
-    init.brp = 20;//41;//9; // 85/(10)
+
+    init.brp = 20;// 84/(21)
     init.propag = 1; //probably fine
     init.phase1 = 2;
     init.phase2 = 2;
@@ -46,16 +49,22 @@ int main()
     mess.byte[6]=0b11110010;
     mess.byte[7]=0b11110010;
     mess.length = 8;
-    
 
-    Pio *piob = PIOB;
-    piob->PIO_PER = 1<<13;  //servo sig enable
-    piob->PIO_OER = 1<<13; //output enable
+    
+    
+    uint32_t lowp = 50*100;
     while(1){
-        piob->PIO_SODR = 1<<13; //set
-        for(int i = 0; i<1000; ++i);
-        piob->PIO_CODR = 1<<13; //clear
-        for(int i = 0; i<1000; ++i);
+        //for(int i = 0; i<100000; ++i);
+        time_spinFor(msecs(10));
+        //printf("%i, %i\n\r", getJoyX(), getJoyY());
+
+        lowp = lowp*90/100 + ((uint32_t)getJoyX())*10;
+        uint16_t servdt = lowp / 100;
+        if(servdt < 35) servdt = 35;
+        if(servdt > 212) servdt = 212;
+        servdt = (servdt - 35)*(98*2)/177;
+        servDuty(servdt);
+
     }
 
 

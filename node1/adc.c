@@ -2,6 +2,7 @@
 #include "adc.h"
 #include <avr/interrupt.h>
 #include "can.h"
+#include "display.h"
 
 uint8_t adcReads[4];
 
@@ -68,6 +69,8 @@ int8_t joyTrinaryY(){
 }
 
 ISR(TIMER0_COMP_vect) {
+    uint8_t selbuf = spiGetChipSelect();
+    spiChipSelect(spiOff);
     adcRead();
     canMessage mess;
     mess.id = 1;
@@ -75,4 +78,5 @@ ISR(TIMER0_COMP_vect) {
     mess.data[0]=joyDirectionX();
     mess.data[1]=joyDirectionY();
     canSend(&mess);
+    spiChipSelect(selbuf);
 }

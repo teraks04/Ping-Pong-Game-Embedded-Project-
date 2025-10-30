@@ -110,7 +110,7 @@ uint8_t can_rx(CanMsg* m){
     
     
 
-    
+uint8_t joyX, joyY;
 
 // Example CAN interrupt handler
 void CAN0_Handler(void){
@@ -121,7 +121,11 @@ void CAN0_Handler(void){
         // Add your message-handling code here
         CanMsg mess;
         can_rx(&mess);
-        printf("%i, %i\n\r", mess.byte[0], mess.byte[1]);
+        if(mess.id == 1){ //joystickUpdate
+            joyY = mess.byte[0];
+            joyX = mess.byte[1];
+        }
+        //printf("%i, %i\n\r", mess.byte[0], mess.byte[1]);
         //can_printmsg(can_rx());
     } else {
         printf("CAN0 message arrived in non-used mailbox\n\r");
@@ -135,4 +139,9 @@ void CAN0_Handler(void){
     NVIC_ClearPendingIRQ(ID_CAN0);
 } 
 
-
+uint8_t getJoyX(){
+    return joyX;
+}
+uint8_t getJoyY(){
+    return joyY;
+}

@@ -3,11 +3,17 @@
 
 //DD_SCK er makro for pinnumeret til pinnnen som skal brukes til klokka
 
+uint8_t currentSelect;
+
 void spiChipSelect(uint8_t p){
+    currentSelect = p;
     uint8_t portmask = 0b11100;
     uint8_t activePort = 0b100<<p;
     PORTB |= portmask^activePort;
     PORTB &= ~(activePort);
+}
+uint8_t spiGetChipSelect(){
+    return currentSelect;
 }
 
 
@@ -20,8 +26,9 @@ void spiMasterInit(void){
     //Set PB2-PB4 as output for chip select
     DDRB |= (1<<2)|(1<<3)|(1<<4); 
 
-    /* Enable SPI, Master, set clock rate fck/16 */
-    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+    /* Enable SPI, Master, set clock rate fck/4 */
+    SPCR = (1<<SPE)|(1<<MSTR)|(0b00<<SPR0);
+    SPSR |= 0; //fck / 4
 }
 
 void spiMasterTransmit(char cData){

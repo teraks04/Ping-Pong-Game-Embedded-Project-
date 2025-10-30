@@ -1,5 +1,5 @@
-build/can_controller.o: can_controller.c can_controller.h \
- sam/sam3x/include/sam.h sam/sam3x/include/sam3x8e.h sam/cmsis/core_cm3.h \
+build/pwm.o: pwm.c pwm.h sam/sam3x/include/sam.h \
+ sam/sam3x/include/sam3x8e.h sam/cmsis/core_cm3.h \
  sam/cmsis/cmsis_version.h sam/cmsis/cmsis_compiler.h \
  sam/cmsis/cmsis_gcc.h sam/cmsis/mpu_armv7.h \
  sam/sam3x/source/system_sam3x.h sam/compiler.h sam/parts.h \
@@ -72,4 +72,4 @@ build/can_controller.o: can_controller.c can_controller.h \
  sam/sam3x/include/instance/instance_wdt.h \
  sam/sam3x/include/instance/instance_rtc.h \
  sam/sam3x/include/instance/instance_gpbr.h \
- sam/sam3x/include/pio/pio_sam3x8e.h uart.h
+ sam/sam3x/include/pio/pio_sam3x8e.h
