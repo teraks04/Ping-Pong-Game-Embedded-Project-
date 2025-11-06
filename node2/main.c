@@ -7,6 +7,7 @@
 #include "time.h"
 #include "adc.h"
 #include "quadrature.h"
+#include "motor.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -23,10 +24,6 @@ int main()
 {
     SystemInit();
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
-    servSigEnable();
-    adc_init();
-    quadratureDecodeInit();
-    
     
     CanInit init;
 
@@ -38,18 +35,26 @@ int main()
     init.smp = 0; //
 
     can_init(init, 1);
-
     uart_init(84000000, 9600);
-    printf("Hello World\r\n");
+    printf("uart initialized\r\n");
+
+    servSigEnable();
+    adc_init();
+    motorInit();
+    quadratureDecodeInit();
+    
+
 
     
     uint8_t lastIR = 0;
     uint16_t goalcount = 0;
     uint32_t lowp = 50*100;
     while(1){
+        motorSetSpeed(300);
+
         //for(int i = 0; i<100000; ++i);
         time_spinFor(msecs(10));
-        printf("%u\n\r", REG_TC2_CV0);
+        //printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
         //printf("t\n\r");
 
         lowp = lowp*85/100 + ((uint32_t)getJoyX())*15;
@@ -67,7 +72,7 @@ int main()
             ms.id = 0;
             ms.length = 1;
             ms.byte[0]=goalcount;
-            //can_tx(ms);
+            //can_tx(/* code */ms);
         }
         lastIR = ir;
     }
