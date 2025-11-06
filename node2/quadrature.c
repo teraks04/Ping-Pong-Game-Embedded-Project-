@@ -13,7 +13,9 @@ void quadratureDecodeInit(){
 
     REG_TC2_CCR0 = 0b010; //disable clock to channel 0
 
-    REG_TC2_CMR0 = 4; //use system clock
+    REG_TC2_CMR0 = 5; //use system clock
+    REG_TC2_CMR1 = 5; //use system clock
+    REG_TC2_CMR2 = 5; //use system clock
 
     REG_TC2_BMR |=
         0b1<<8 //enable quadrature decode

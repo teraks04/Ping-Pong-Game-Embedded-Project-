@@ -42,7 +42,7 @@ int main()
     adc_init();
     motorInit();
     quadratureDecodeInit();
-    
+    printf("status:%u\n\r", REG_TC2_SR0);
 
 
     
