@@ -13,9 +13,7 @@ SOURCE_FILES = \
 	pwm.c \
 	time.c \
 	adc.c \
-	#can_interrupt.c \
-	#can_controller.c \
-#	filenameN.c
+	quadrature.c \
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))

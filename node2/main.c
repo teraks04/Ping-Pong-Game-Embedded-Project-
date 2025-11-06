@@ -6,6 +6,7 @@
 #include "pwm.h"
 #include "time.h"
 #include "adc.h"
+#include "quadrature.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -24,6 +25,7 @@ int main()
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
     servSigEnable();
     adc_init();
+    quadratureDecodeInit();
     
     
     CanInit init;
@@ -47,6 +49,8 @@ int main()
     while(1){
         //for(int i = 0; i<100000; ++i);
         time_spinFor(msecs(10));
+        printf("%u\n\r", REG_TC2_CV0);
+        //printf("t\n\r");
 
         lowp = lowp*85/100 + ((uint32_t)getJoyX())*15;
         uint16_t servdt = lowp / 100;
@@ -57,13 +61,13 @@ int main()
         
         uint8_t ir = adc_read()<400? 1:0;
         if(ir && !lastIR) {
-            printf("Goal!!!!!!!!!!! #%u\n\r", ++goalcount);
+            //printf("Goal:( #%u\n\r", ++goalcount);
 
             CanMsg ms;
             ms.id = 0;
             ms.length = 1;
             ms.byte[0]=goalcount;
-            can_tx(ms);
+            //can_tx(ms);
         }
         lastIR = ir;
     }
