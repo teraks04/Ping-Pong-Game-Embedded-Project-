@@ -23,3 +23,7 @@ uint8_t ioboardGetButton(uint8_t b){
 uint8_t getCheckSum(){
     return buttons[0]+buttons[1]+buttons[2];
 }
+
+uint8_t* ioboardGetButtons(){
+    return buttons;
+}

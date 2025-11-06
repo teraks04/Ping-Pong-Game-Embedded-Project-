@@ -95,5 +95,31 @@ void can_printmsg(CanMsg m);
 uint8_t getJoyX();
 uint8_t getJoyY();
 
+enum button {
+    buttR0,
+    buttR1,
+    buttR2,
+    buttR3,
+    buttR4,
+    buttR5,
+    RESERVED1,
+    RESERVED2,
+    buttL0,
+    buttL1,
+    buttL2,
+    buttL3,
+    buttL4,
+    buttL5,
+    buttL6,
+    buttNavButt=16,
+    buttNavRight,
+    buttNavDown,
+    buttNavLeft,
+    buttNavUp
+};
+uint8_t getButton(uint32_t butt);
+
+
+
 
 #endif

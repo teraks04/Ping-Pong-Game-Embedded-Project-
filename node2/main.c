@@ -49,10 +49,11 @@ int main()
     uint8_t lastIR = 0;
     uint16_t goalcount = 0;
     uint32_t lowp = 50*100;
+    //servDuty(104);
     while(1){
 
         //for(int i = 0; i<100000; ++i);
-        time_spinFor(msecs(100));
+        time_spinFor(msecs(10));
         //printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
         //printf("t\n\r");
 
@@ -63,10 +64,11 @@ int main()
         if(servdt < 35) servdt = 35;
         if(servdt > 212) servdt = 212;
         servdt = (servdt - 35)*(98*2)/177;
+        printf("%u\n\r", servdt);
         servDuty(servdt);
 
         //Motor
-        motorSetSpeed(300);
+        motorSetSpeed(0);
         
         //IR sensor
         uint8_t ir = adc_read()<400? 1:0;
@@ -77,11 +79,14 @@ int main()
             ms.id = 0;
             ms.length = 1;
             ms.byte[0]=goalcount;
-            //can_tx(/* code */ms);
+            //can_tx(/* ClockTestcode */ms);
         }
         lastIR = ir;
 
-        //Solenoide
+        //knapper
+        for(uint8_t i = 0; i<24; ++i){
+            printf("%i", (getButton(i)==0)? 0: 1);
+        }
 
     }
 
