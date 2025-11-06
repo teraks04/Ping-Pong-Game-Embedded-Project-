@@ -41,19 +41,18 @@ int main()
     servSigEnable();
     adc_init();
     motorInit();
-    quadratureDecodeInit();
-    printf("status:%u\n\r", REG_TC2_SR0);
+    //quadratureDecodeInit();
+    //printf("status:%u\n\r", REG_TC2_SR0);
 
 
     
     uint8_t lastIR = 0;
     uint16_t goalcount = 0;
     uint32_t lowp = 50*100;
-    
     while(1){
 
         //for(int i = 0; i<100000; ++i);
-        time_spinFor(msecs(10));
+        time_spinFor(msecs(100));
         //printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
         //printf("t\n\r");
 
@@ -83,6 +82,7 @@ int main()
         lastIR = ir;
 
         //Solenoide
+
     }
 
 

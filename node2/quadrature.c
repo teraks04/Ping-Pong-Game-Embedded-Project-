@@ -33,6 +33,8 @@ void quadratureDecodeInit(){
 
 void quadratureDecodeClockTest(){
     printf("clocktest\n\r");
+    PMC->PMC_WPMR = 0x504D42;
+    //PMC->PMC_PCER0 = 1<<29;
     REG_PMC_PCER0 = 1<<29; //enable clock to counter 2
     REG_TC2_WPMR = 0x54494D00 | 0; //disable write protect
 
