@@ -11,7 +11,8 @@
     "can.h": "c",
     "cancont.h": "c",
     "limits": "c",
-    "pwm.h": "c"
+    "pwm.h": "c",
+    "sam.h": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
