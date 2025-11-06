@@ -49,21 +49,27 @@ int main()
     uint8_t lastIR = 0;
     uint16_t goalcount = 0;
     uint32_t lowp = 50*100;
+    
     while(1){
-        motorSetSpeed(300);
 
         //for(int i = 0; i<100000; ++i);
         time_spinFor(msecs(10));
         //printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
         //printf("t\n\r");
 
+
+        //Servo
         lowp = lowp*85/100 + ((uint32_t)getJoyX())*15;
         uint16_t servdt = lowp / 100;
         if(servdt < 35) servdt = 35;
         if(servdt > 212) servdt = 212;
         servdt = (servdt - 35)*(98*2)/177;
         servDuty(servdt);
+
+        //Motor
+        motorSetSpeed(300);
         
+        //IR sensor
         uint8_t ir = adc_read()<400? 1:0;
         if(ir && !lastIR) {
             //printf("Goal:( #%u\n\r", ++goalcount);
@@ -75,6 +81,8 @@ int main()
             //can_tx(/* code */ms);
         }
         lastIR = ir;
+
+        //Solenoide
     }
 
 
