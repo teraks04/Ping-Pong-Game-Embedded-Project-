@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include "adc.h"
-#include <avr/interrupt.h>
 #include "can.h"
 #include "display.h"
 
@@ -66,17 +65,4 @@ int8_t joyTrinaryY(){
     if(yRelative > 127+50) return 1;
     if(yRelative < 127-50) return -1;
     return 0;
-}
-
-ISR(TIMER0_COMP_vect) {
-    uint8_t selbuf = spiGetChipSelect();
-    spiChipSelect(spiOff);
-    adcRead();
-    canMessage mess;
-    mess.id = 1;
-    mess.dlc = 2;
-    mess.data[0]=joyDirectionX();
-    mess.data[1]=joyDirectionY();
-    canSend(&mess);
-    spiChipSelect(selbuf);
 }
