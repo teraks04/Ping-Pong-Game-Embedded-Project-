@@ -17,6 +17,8 @@ void graphTextPage(vec2 loc, const char* str);
 void graphText(vec2 loc, const char *str);
 void graphReFont(uint8_t *const ft, vec2 dims);
 void graphFillOrthoQuad(const vec2 min, const vec2 max);
+void graphSet(uint8_t x, uint8_t y);
+void graphReset(uint8_t x, uint8_t y);
 
 
 #endif /* GRAPHICS_H_ */

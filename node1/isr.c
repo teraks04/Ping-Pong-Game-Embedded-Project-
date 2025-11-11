@@ -8,6 +8,7 @@ ISR(TIMER0_COMP_vect) {
     uint8_t selbuf = spiGetChipSelect();
     spiChipSelect(spiOff);
     adcRead();
+    ioboardUpdateJoy();
     ioboardUpdateButtons();
     canMessage mess;
     mess.id = 1;

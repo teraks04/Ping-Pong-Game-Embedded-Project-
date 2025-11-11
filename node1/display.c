@@ -30,13 +30,16 @@ void dispInit(){
 }
 
 void prepareScreenWrite(){
-    spiChipSelect(spiDisplay);
+        spiChipSelect(spiDisplay);
     commandMode();
     spiMasterTransmit(0b00100000); //horizontal adressal mode
     spiMasterTransmit(0b00000000);
     spiMasterTransmit(0b00100010); //page start/end
-    spiMasterTransmit(0b00000000);
-    spiMasterTransmit(0b00000111);
+    spiMasterTransmit(0);
+    spiMasterTransmit(7);
+    spiMasterTransmit(0b00100001); //column start/end
+    spiMasterTransmit(0);
+    spiMasterTransmit(127);
     dataMode();
 }
 void dispCheckerboardFill(){

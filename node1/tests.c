@@ -91,26 +91,26 @@ void joystickTest(){
         spiChipSelect(spiOff);
         
         for(uint32_t i = 0; i < 200000; ++i);
+        if(ioboardGetFlag(buttL7)) return;
     }
 }
 
 void ioBoardTest(){
-    spiChipSelect(spiIO);
-    spiMasterTransmit(0x05);
-    for(uint32_t i = 0; i < 10000; ++i);
-    spiMasterTransmit(2);
-    spiMasterTransmit(1);
-    spiChipSelect(spiOff);
-
-
     uint8_t i = 0;
     while(1){
-        ioboardUpdateButtons();
-        printf("\n\r%d %u\n\r", getCheckSum(), ++i);
-        for(uint8_t i = 0; i<24; ++i){
+        //ioboardUpdateJoy();
+        //ioboardUpdateButtons();
+        for(uint8_t i = 0; i<32; ++i){
+            printf("%i", (ioboardGetFlag(i)==0)? 0: 1);
+        }
+        printf("   ");
+        for(uint8_t i = 0; i<32; ++i){
             printf("%i", (ioboardGetButton(i)==0)? 0: 1);
         }
+        printf("\n\r");
         for(uint32_t i = 0; i < 200000; ++i);
+
+        if(ioboardGetFlag(buttL7)) return;
     }
 }
 
@@ -152,29 +152,31 @@ void testText(){
         graphText((vec2){40, offs++}, "Hello World!|_#");
         dispLoadImage(BASE_ADDRESS);
         if(offs > 63) offs = 0;
+        if(ioboardGetFlag(buttL7)) return;
     }
 }
 
 void testMenu(){
     Menu testMenu;
-    menuMake(&testMenu, 20);
+    menuMake(&testMenu, 4);
     menuAppend(&testMenu, "F testJoy", joystickTest);
-    menuAppend(&testMenu, "F option2", testText);
-    menuAppend(&testMenu, "F option3", testText);
-    menuAppend(&testMenu, "F option4", testText);
-    menuAppend(&testMenu, "F option5", testText);
+    menuAppend(&testMenu, "F IOtest", ioBoardTest);
+    menuAppend(&testMenu, "F textTest", testText);
     menuAppend(&testMenu, "F testCircle", circleTest);
     uint8_t select = 0;
     printf("%i %i\n\r", testMenu.count, testMenu.maxCount);
+    while(1)
+        menuLayer(&testMenu);
+}
+
+void burningShip(){
     while(1){
-        for(uint32_t i = 0; i < 100000; ++i);
-        ioboardUpdateButtons();
-        if(ioboardGetButton(buttNavUp)) select--;
-        if(ioboardGetButton(buttNavDown)) select++;
-        if(select > 5) select = 0;
-        if(ioboardGetButton(buttNavButt)) menuEnter(&testMenu, select);
         graphClear();
-        menuRender(&testMenu, select);
+        for(uint32_t x = 0; x<128; ++x)
+        for(uint32_t y = 0; y<64; ++y){
+            if((x*x) % 100ul < 50ul) graphSet(x, y);
+        }
+
         dispLoadImage(BASE_ADDRESS);
     }
 }

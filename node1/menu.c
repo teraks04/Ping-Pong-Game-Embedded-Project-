@@ -2,6 +2,7 @@
 #include "xmem.h"
 #include "graphics.h"
 #include "string.h"
+#include "ioboard.h"
 
 
 //a menu is an array of menu-items
@@ -41,13 +42,27 @@ void menuRender(Menu* men, uint8_t select){
         graphText((vec2){4, (line-topLine)*6}, men->items[line].name);
 }
 
-Menu* menuEnter(Menu* men, uint8_t select){
-    if(men->items[select].name[0]=='M')
-        return men->items[select].destAddress;
-    void (*func)(void) = men->items[select].destAddress;
-    func();
+void menuLayer(Menu* men){
+    uint8_t select = 0;
+    while(1){
+        for(uint32_t i = 0; i < 100000; ++i);
+        if(ioboardGetFlag(buttJoyUp)) select--;
+        if(ioboardGetFlag(buttJoyDown)) select++;
+        if(select >= men->count) select = 0;
+        if(select > 128) select = men->count-1;
+        if(ioboardGetFlag(buttJoyButt)) menuEnter(men, select);
+        graphClear();
+        menuRender(men, select);
+        dispLoadImage(BASE_ADDRESS);
+        if(ioboardGetFlag(buttL7)) return;
+    }
 }
 
-void menuLayer(Menu* men){
-    return;
+Menu* menuEnter(Menu* men, uint8_t select){
+    if(men->items[select].name[0]=='M'){
+        menuLayer(men->items[select].destAddress);
+        return;
+    }       
+    void (*func)(void) = men->items[select].destAddress;
+    func();
 }

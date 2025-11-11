@@ -90,3 +90,10 @@ void graphFillOrthoQuad(const vec2 min, const vec2 max){
         pageadr[x] |= bottomMask;
     
 }
+
+void graphSet(uint8_t x, uint8_t y){
+    BASE_ADDRESS[(y>>3)*128+x] |= 1<<(y&0b111);
+}
+void graphReset(uint8_t x, uint8_t y){
+    BASE_ADDRESS[(y>>3)*128+x] &= ~(1<<(y&0b111));
+}

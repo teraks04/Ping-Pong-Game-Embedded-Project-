@@ -12,8 +12,8 @@
 #include "can.h"
 #include "menu.h"
 
-
-int main() {
+int main()
+{
     uart_init();
     xmem_init();
     adcInit();
@@ -24,28 +24,26 @@ int main() {
     cancontInit();
     canInit();
 
-    canMessage mess;
-    mess.id = 0b00000000100;
-    mess.data[0]=51;
-    mess.data[1]=0b11110010;
-    mess.data[2]=0b11110010;
-    mess.data[3]=0b11110010;
-    mess.data[4]=0b11110010;
-    mess.data[5]=0b11110010;
-    mess.data[6]=0b11110010;
-    mess.data[7]=0b11110010;
-    mess.dlc = 8;
-    
     uint8_t i = 0;
-    //dispLoadImage(BASE_ADDRESS);
+    // dispLoadImage(BASE_ADDRESS);
     dispBlackFill();
-    testMenu();
-
-    while(0){
-        for(uint16_t i = 1; i>0; ++i);
-    }
     
-    while(1);
+    Menu testMenu;
+    menuMake(&testMenu, 5);
+    menuAppend(&testMenu, "testJoy", joystickTest);
+    menuAppend(&testMenu, "IOtest", ioBoardTest);
+    menuAppend(&testMenu, "textTest", testText);
+    menuAppend(&testMenu, "testCircle", circleTest);
+    menuAppend(&testMenu, "testRAM", SRAM_test);
+
+    Menu mainMenu;
+    menuMake(&mainMenu, 5);
+    menuAppend(&mainMenu, "M tests", &testMenu);
+    
+    burningShip();
+    while(1)
+        menuLayer(&mainMenu);
+
 
     return 0;
 }
