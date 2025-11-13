@@ -172,11 +172,19 @@ void testMenu(){
 void burningShip(){
     while(1){
         graphClear();
-        for(uint32_t x = 0; x<128; ++x)
-        for(uint32_t y = 0; y<64; ++y){
-            if((x*x) % 100ul < 50ul) graphSet(x, y);
+        for(uint8_t x = 0; x<128; ++x)
+        for(uint8_t y = 0; y<64; ++y){
+            uint16_t zi = y;
+            uint16_t zr = x;
+            for(uint8_t i = 0; i<0; ++i){
+                uint16_t rtemp = ((uint32_t)zr*(uint32_t)zr >>8)-((uint32_t)zi*(uint32_t)zi >>8) + x;
+                zr = (2*(uint32_t)zr*(uint32_t)zi >>8) + y;
+            }
+            if(((uint32_t)zr*(uint32_t)zr >>8)+((uint32_t)zi*(uint32_t)zi >>8)<4*256)
+                graphSet(x, y);
         }
 
         dispLoadImage(BASE_ADDRESS);
+        if(ioboardGetFlag(buttL7)) return;
     }
 }

@@ -27,8 +27,6 @@ void quadratureDecodeInit(){
     REG_TC2_CCR0 = 0b001; //enable clock to channel 0
 
     REG_TC2_WPMR = 0x54494D<<8 | 1; //enable write protect
-
-    printf("status:%u\n\r", REG_TC2_SR0);
 }
 
 void quadratureDecodeClockTest(){

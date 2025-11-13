@@ -40,7 +40,7 @@ int main()
     menuMake(&mainMenu, 5);
     menuAppend(&mainMenu, "M tests", &testMenu);
     
-    burningShip();
+    //burningShip();
     while(1)
         menuLayer(&mainMenu);
 
