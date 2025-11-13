@@ -12,6 +12,13 @@
 #include "can.h"
 #include "menu.h"
 
+void sendControls(){
+    doIsrCANsend(1);
+    testText();
+    //while(!ioboardGetFlag(buttL7));
+    doIsrCANsend(0);
+}
+
 int main()
 {
     uart_init();
@@ -38,9 +45,12 @@ int main()
 
     Menu mainMenu;
     menuMake(&mainMenu, 5);
+    menuAppend(&mainMenu, "CAN send", sendControls);
     menuAppend(&mainMenu, "M tests", &testMenu);
     
     //burningShip();
+    sendControls();
+    //ioBoardTest();
     while(1)
         menuLayer(&mainMenu);
 

@@ -115,3 +115,13 @@ uint8_t canReceived(){
     uint8_t cainintf = cancontRead(MCP_CANINTF);
     return cainintf & 0b11;
 }
+
+canSendisr = 0;
+
+void doIsrCANsend(uint8_t state){
+    canSendisr = state;
+}
+
+uint8_t getIsrCANsend(){
+    return canSendisr;
+}

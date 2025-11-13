@@ -45,43 +45,55 @@ int main()
     // quadratureDecodeInit();
     // printf("status:%u\n\r", REG_TC2_SR0);
     solenoideInit();
+    solenoideStopShoot();
 
     //quadratureDecodeInit();
     quadratureDecodeClockTest();
     printf("Quadrature status:%u\n\r", REG_TC2_SR0);
 
-    uint8_t lastIR = 0;
     uint16_t goalcount = 0;
     uint32_t lowp = 50 * 100;
     uint8_t solenoideCount = 0;
     // servDuty(104);
+
+    uint8_t stat = 0;
+    uint16_t irActiveTime = 0;
+    uint16_t irInactiveTime = 0;
     while (1)
     {
 
         // for(int i = 0; i<100000; ++i);
         time_spinFor(msecs(10));
-        // printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
+        //printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
         // printf("t\n\r");
 
         // Servo
-        lowp = lowp * 85 / 100 + ((uint32_t)getJoyX()) * 15;
+        lowp = lowp * 75 / 100 + ((uint32_t)getJoyX()) * 25;
         uint16_t servdt = lowp / 100;
         if (servdt < 35)
             servdt = 35;
         if (servdt > 212)
             servdt = 212;
         servdt = (servdt - 35) * (98 * 2) / 177;
-        printf("%u\n\r", servdt);
+        //printf("%u\n\r", servdt);
         servDuty(servdt);
 
         // Motor
-        motorSetSpeed(0);
+        motorSetSpeed(-(getJoyY()-128)*1024/200);
 
         // IR sensor
         uint8_t ir = adc_read() < 400 ? 1 : 0;
-        if (ir && !lastIR)
-        {
-            // printf("Goal:( #%u\n\r", ++goalcount);
+        if (ir){
+            irActiveTime++;
+            irInactiveTime = 0;
+        }
+        else{
+            irInactiveTime++;
+        }
+        if(irInactiveTime > 4) irActiveTime = 0;
+        if(irActiveTime == 3){
+
+            printf("Goal:( #%u\n\r", ++goalcount);
 
             CanMsg ms;
             ms.id = 0;
@@ -89,15 +101,23 @@ int main()
             ms.byte[0] = goalcount;
             // can_tx(/* ClockTestcode */ms);
         }
-        lastIR = ir;
 
         // knapper
         for (uint8_t i = 0; i < 24; ++i)
         {
-            printf("%i", (getButton(i) == 0) ? 0 : 1);
+            //printf("%i", (getButton(i) == 0) ? 0 : 1);
         }
 
         // solenoide
+        // if(stat){
+        //     stat = 0;
+        //     solenoideActive();
+        // }
+        // else{
+        //     stat = 1;
+        //     solenoideStopShoot();
+        // }
+
         if (getButton(buttR5) & !solenoideCount)
         {
             solenoideCount = 1;
@@ -106,14 +126,13 @@ int main()
         if(solenoideCount){
             solenoideCount++;
         }
-        if(solenoideCount > 30){
-            solenoideCount = 0;
+        if(solenoideCount > 4){
             solenoideStopShoot();
         }
+        if(solenoideCount > 20){
+            solenoideCount = 0;
+        }
+
     }
 
-    while (1)
-    {
-        /* code */
-    }
-}
+}    

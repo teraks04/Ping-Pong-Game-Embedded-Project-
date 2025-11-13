@@ -1,3 +1,4 @@
+#pragma once
 #include "cancont.h"
 typedef struct {
     uint16_t id; 
@@ -9,3 +10,6 @@ void canInit();
 void canSend(canMessage* message);
 canMessage canReceive();
 uint8_t canReceived();
+
+void doIsrCANsend(uint8_t state);
+uint8_t getIsrCANsend();

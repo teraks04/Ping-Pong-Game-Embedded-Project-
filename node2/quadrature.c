@@ -43,7 +43,7 @@ void quadratureDecodeClockTest(){
     
     );
     REG_TC2_RA0 = 90;
-    printf("%u\n\r%u\n\r", REG_TC2_RA0, REG_TC2_SR0);
+    printf("%u\n\r%u\n\r", REG_TC2_RA0, REG_TC2_CMR0);
     
     REG_TC2_CCR0 = 0b101; //enable clock to channel 0
 
