@@ -20,6 +20,8 @@ void motorInit(){
     REG_PIOB_PDR = 1<<12; //no standard IO on PB12
     REG_PIOB_ABSR |= 1<<12; //peripheral function B on PIO
 
+    REG_PWM_CDTYUPD0 = 0; //do not move
+
     //direction pin
     REG_PIOC_PER = 1 << 23; //enable PIO control of PB23
     REG_PIOC_OER = 1 << 23; //configure as output pin

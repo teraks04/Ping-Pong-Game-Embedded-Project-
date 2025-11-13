@@ -47,13 +47,24 @@ int main()
     solenoideInit();
     solenoideStopShoot();
 
-    //quadratureDecodeInit();
-    quadratureDecodeClockTest();
-    printf("Quadrature status:%u\n\r", REG_TC2_SR0);
+    quadratureDecodeInit();
+    //quadratureDecodeClockTest();
+    //encoder_init_plagiarism();
+    //encoder_init_plagiarism_mod();
+    // printf("Quadrature status:%u\n\r", REG_TC2_SR0);
 
     uint16_t goalcount = 0;
     uint32_t lowp = 50 * 100;
     uint8_t solenoideCount = 0;
+    int accumError;
+    int Inum = 4;
+    int Iden = 100;
+    int Pnum = 20;
+    int Pden = 30;
+    int posRef = 0; //intervallet er 5600 langt
+    int lastPos = 0;
+    int countEqual = 0;
+    
     // servDuty(104);
 
     uint8_t stat = 0;
@@ -64,7 +75,7 @@ int main()
 
         // for(int i = 0; i<100000; ++i);
         time_spinFor(msecs(10));
-        //printf("%u %u %u\n\r", REG_TC2_CV0, REG_TC2_CV1, REG_TC2_CV2);
+        // printf("%i\n\r", encoderPosition());
         // printf("t\n\r");
 
         // Servo
@@ -79,7 +90,24 @@ int main()
         servDuty(servdt);
 
         // Motor
-        motorSetSpeed(-(getJoyY()-128)*1024/200);
+        int pos = encoderPosition();
+        
+        if(abs(getJoyY()-128)>10)
+            posRef += (-(getJoyY()-128)*100/100);
+        int error = posRef - pos;
+        accumError += error;
+        int input = error*Pnum/Pden + accumError*Inum/Iden;
+        motorSetSpeed(input);
+
+        if(pos == lastPos){countEqual++;}
+        else countEqual = 0;
+        if(countEqual > 4 & abs(input) > 300){
+            posRef = pos;
+            accumError = 0;
+        }
+        lastPos = pos;
+
+
 
         // IR sensor
         uint8_t ir = adc_read() < 400 ? 1 : 0;
