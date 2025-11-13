@@ -1,4 +1,4 @@
 
 void solenoideInit();
-void solenoideShoot();
+void solenoideActive();
 void solenoideStopShoot();

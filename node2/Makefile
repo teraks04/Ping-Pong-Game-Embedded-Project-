@@ -15,6 +15,7 @@ SOURCE_FILES = \
 	adc.c \
 	quadrature.c \
 	motor.c \
+	solenoide.c \
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))
