@@ -120,12 +120,22 @@ int main()
         // IR sensor
         auto ir = adc_read();
         //printf("%u\n\r", ir);
+        if(getResetFlag()) goalcount = 0;
 
         if(ir<200 & irActiveTime == 0) {
-            printf("Goal:( #%u\n\r", ++goalcount);
+            ++goalcount;
+            CanMsg ms;
+            ms.id = 'G';
+            ms.length = 2;
+            ms.byte[0] = goalcount&0xFF;
+            ms.byte[1] = (goalcount>>8)&0xFF;
+            can_tx(ms);
+
+            printf("Goal:( #%u\n\r", goalcount);
             irActiveTime = 1;
         }
         if(ir > 500) irActiveTime = 0;
+        
 
         // knapper
         for (uint8_t i = 0; i < 24; ++i)

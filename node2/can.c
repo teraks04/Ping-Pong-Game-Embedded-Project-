@@ -112,6 +112,7 @@ uint8_t can_rx(CanMsg* m){
 
 uint8_t joyX, joyY;
 uint32_t buttons;
+uint8_t resetGoalCountFlag;
 
 // Example CAN interrupt handler
 void CAN0_Handler(void){
@@ -131,6 +132,9 @@ void CAN0_Handler(void){
             buttons |= (uint32_t)mess.byte[3];
             buttons = buttons << 8;
             buttons |= (uint32_t)mess.byte[2];
+        }
+        else if(mess.id == 'R'){
+            resetGoalCountFlag=1;
         }
         //printf("%i, %i\n\r", mess.byte[0], mess.byte[1]);
         //can_printmsg(can_rx());
@@ -155,4 +159,10 @@ uint8_t getJoyY(){
 
 uint8_t getButton(uint32_t butt){
     return (buttons>>butt)&1;
+}
+
+uint8_t getResetFlag(){
+    uint8_t flaguf = resetGoalCountFlag;
+    resetGoalCountFlag = 0;
+    return flaguf;
 }

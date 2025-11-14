@@ -2,13 +2,20 @@
 #include "avr/io.h"
 #include <avr/interrupt.h>
 
+uint16_t goalCount = 0;
 
 ISR(INT0_vect) {
     canMessage messr = canReceive();
+    if(messr.id = 'G'){
+        goalCount  = (uint16_t)messr.data[0] | (uint16_t)messr.data[1]<<8;
+    }
+}
 
-    uint8_t sig = messr.data[0];
-    int sign = sig;
-    printf("c:%i\n\r", sig);
+uint16_t getGoalCount(){
+    return goalCount;
+}
+void resetGoalCount(){
+    goalCount = 0;
 }
 
 

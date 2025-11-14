@@ -14,7 +14,8 @@
     "pwm.h": "c",
     "sam.h": "c",
     "menu.h": "c",
-    "utility": "c"
+    "utility": "c",
+    "cstdint": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",

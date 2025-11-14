@@ -13,3 +13,6 @@ uint8_t canReceived();
 
 void doIsrCANsend(uint8_t state);
 uint8_t getIsrCANsend();
+
+uint16_t getGoalCount();
+void resetGoalCount();
