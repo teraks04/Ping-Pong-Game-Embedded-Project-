@@ -53,82 +53,79 @@ int main()
     //encoder_init_plagiarism_mod();
     // printf("Quadrature status:%u\n\r", REG_TC2_SR0);
 
+    int freq = 4;
+
     uint16_t goalcount = 0;
-    uint32_t lowp = 50 * 100;
     uint8_t solenoideCount = 0;
     int accumError;
-    int Inum = 4;
-    int Iden = 100;
-    int Pnum = 20;
-    int Pden = 30;
+    int Inum = 2;
+    int Iden = 100*freq;
+    int Pnum = 50;
+    int Pden = 10;
     int posRef = 0; //intervallet er 5600 langt
     int lastPos = 0;
     int countEqual = 0;
+
+    int Snum = 15;
+    int Sden = 20*freq;
+    int servStat = Snum * 100*freq;
     
     // servDuty(104);
 
-    uint8_t stat = 0;
     uint16_t irActiveTime = 0;
-    uint16_t irInactiveTime = 0;
+    uint64_t loopStart = time_now();
+
     while (1)
     {
+        //printf("%u\n\r", (uint32_t)(time_now()*100/84000000));
+        while(time_now()<loopStart);
+        loopStart = time_now()+84000000/50/freq;
 
         // for(int i = 0; i<100000; ++i);
-        time_spinFor(msecs(10));
         // printf("%i\n\r", encoderPosition());
         // printf("t\n\r");
 
         // Servo
-        lowp = lowp * 75 / 100 + ((uint32_t)getJoyX()) * 25;
-        uint16_t servdt = lowp / 100;
+        servStat = servStat-servStat*Snum/Sden + (int)getJoyX()*Snum;
+        uint16_t servdt = servStat/Sden;
         if (servdt < 35)
             servdt = 35;
         if (servdt > 212)
             servdt = 212;
         servdt = (servdt - 35) * (98 * 2) / 177;
-        //printf("%u\n\r", servdt);
+        //printf("%u\n\r", servStat);
         servDuty(servdt);
 
         // Motor
         int pos = encoderPosition();
         
         if(abs(getJoyY()-128)>10)
-            posRef += (-(getJoyY()-128)*100/100);
-        int error = posRef - pos;
+            posRef += (-(getJoyY()-128)*200/100);
+        int error = posRef/freq - pos;
         accumError += error;
         int input = error*Pnum/Pden + accumError*Inum/Iden;
         motorSetSpeed(input);
 
         if(pos == lastPos){countEqual++;}
         else countEqual = 0;
-        if(countEqual > 4 & abs(input) > 300){
-            posRef = pos;
+        if(countEqual > 4*freq & abs(input) > 300){
+            posRef = pos*freq;
             accumError = 0;
+            countEqual = 0;
         }
         lastPos = pos;
 
 
 
         // IR sensor
-        uint8_t ir = adc_read() < 400 ? 1 : 0;
-        if (ir){
-            irActiveTime++;
-            irInactiveTime = 0;
-        }
-        else{
-            irInactiveTime++;
-        }
-        if(irInactiveTime > 4) irActiveTime = 0;
-        if(irActiveTime == 3){
+        auto ir = adc_read();
+        //printf("%u\n\r", ir);
 
+        if(ir<200 & irActiveTime == 0) {
             printf("Goal:( #%u\n\r", ++goalcount);
-
-            CanMsg ms;
-            ms.id = 0;
-            ms.length = 1;
-            ms.byte[0] = goalcount;
-            // can_tx(/* ClockTestcode */ms);
+            irActiveTime = 1;
         }
+        if(ir > 500) irActiveTime = 0;
 
         // knapper
         for (uint8_t i = 0; i < 24; ++i)
@@ -154,10 +151,10 @@ int main()
         if(solenoideCount){
             solenoideCount++;
         }
-        if(solenoideCount > 4){
+        if(solenoideCount > 4*freq){
             solenoideStopShoot();
         }
-        if(solenoideCount > 20){
+        if(solenoideCount > 20*freq){
             solenoideCount = 0;
         }
 
