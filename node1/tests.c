@@ -168,20 +168,30 @@ void testMenu(){
     while(1)
         menuLayer(&testMenu);
 }
+const uint8_t des = 9;
+int16_t zoom = 2;
+int16_t xbas = -895;
 
 void burningShip(){
+    int16_t errad = ((uint32_t)4<<des)*((uint32_t)4<<des)>>des;
+
     while(1){
         graphClear();
         for(uint8_t x = 0; x<128; ++x)
         for(uint8_t y = 0; y<64; ++y){
-            uint16_t zi = y;
-            uint16_t zr = x;
-            for(uint8_t i = 0; i<0; ++i){
-                uint16_t rtemp = ((uint32_t)zr*(uint32_t)zr >>8)-((uint32_t)zi*(uint32_t)zi >>8) + x;
-                zr = (2*(uint32_t)zr*(uint32_t)zi >>8) + y;
+            int16_t basx = ((int16_t)x-64<<des)>>4*zoom+xbas;
+            int16_t basy = ((int16_t)y-32<<des)>>4*zoom;
+            int16_t zi = basx;
+            int16_t zr = basy;
+            for(uint8_t i = 0; i<15; ++i){
+                uint16_t rtemp = ((uint32_t)zr*(uint32_t)zr >>des)-((uint32_t)zi*(uint32_t)zi >>des) + basx;
+                zi = abs(2*(uint32_t)zr*(uint32_t)zi >>des) + basy;
+                zr = rtemp;
+                if(((int32_t)zr*(int32_t)zr >>des)+((int32_t)zi*(int32_t)zi >>des)>errad) break;
             }
-            if(((uint32_t)zr*(uint32_t)zr >>8)+((uint32_t)zi*(uint32_t)zi >>8)<4*256)
+            if(((int32_t)zr*(int32_t)zr >>des)+((int32_t)zi*(int32_t)zi >>des)<errad)
                 graphSet(x, y);
+            //if(((int32_t)zr*(int32_t)zr >>8)+((int32_t)zi*(int32_t)zi >>8)<(int32_t)rad*(int32_t)rad >>8) graphSet(x, y);
         }
 
         dispLoadImage(BASE_ADDRESS);
